@@ -116,7 +116,7 @@ public class ComSysIntroController {
 
     @FXML
     public void dashboardButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent dashboardRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/User/FXML/IctDashboard.fxml"));
+        Parent dashboardRoot = FXMLLoader.load(getClass().getResource("/User/FXML/IctDashboard.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(dashboardRoot, 1000, 600));
     }
@@ -157,7 +157,7 @@ public class ComSysIntroController {
 
     @FXML
     public void logoutButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent logoutRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/Login/FXML/LoginPage.fxml"));
+        Parent logoutRoot = FXMLLoader.load(getClass().getResource("/Login/FXML/LoginPage.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(logoutRoot, 1000, 600));
     }
@@ -177,35 +177,35 @@ public class ComSysIntroController {
 
     @FXML
     public void premDashboardButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent dashboardRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/User/FXML/PremiumDashboard.fxml"));
+        Parent dashboardRoot = FXMLLoader.load(getClass().getResource("/User/FXML/PremiumDashboard.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(dashboardRoot, 1000, 600));
     }
 
     @FXML
     public void premnextButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent nextRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/ComSysChapter1.fxml"));
+        Parent nextRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/ComSysChapter1.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(nextRoot, 1000, 600));
     }
 
     @FXML
     public void premcomsys1ButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent comsys1Root = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/ComSysChapter1.fxml"));
+        Parent comsys1Root = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/ComSysChapter1.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(comsys1Root, 1000, 600));
     }
 
     @FXML
     public void premcomsys2ButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent comsys2Root = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/ComSysChapter2.fxml"));
+        Parent comsys2Root = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/ComSysChapter2.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(comsys2Root, 1000, 600));
     }
 
     @FXML
     public void premcomsys3ButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent comsys3Root = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/ComSysChapter3.fxml"));
+        Parent comsys3Root = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/ComSysChapter3.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(comsys3Root, 1000, 600));
     }

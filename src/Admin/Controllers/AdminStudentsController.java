@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.util.ResourceBundle;
 
 import org.controlsfx.control.textfield.CustomTextField;
-
 import com.jfoenix.controls.JFXButton;
 
 import Admin.Controllers.StudentsCRUD.StudentsCreateController;
@@ -103,14 +102,12 @@ public class AdminStudentsController implements Initializable {
 
             StudentsCreateController createController = loader.getController();
             createController.setParentController(this);
-            Stage popupStage = new javafx.stage.Stage();
+            Stage popupStage = new Stage();
             popupStage.setTitle("Create Student");
             popupStage.initModality(Modality.APPLICATION_MODAL);
             popupStage.initStyle(StageStyle.UNDECORATED);
             popupStage.setScene(new Scene(root));
             popupStage.showAndWait();
-
-            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -131,7 +128,6 @@ public class AdminStudentsController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Admin/FXML/UpdatePopup.fxml"));
             Parent root = loader.load();
 
-            // Get the controller and pass the selected student and parent controller
             Admin.Controllers.StudentsCRUD.StudentsUpdateController updateController = loader.getController();
             updateController.setParentController(this);
             updateController.setStudentToUpdate(selectedStudent);
@@ -153,19 +149,20 @@ public class AdminStudentsController implements Initializable {
 
         if (selectedStudent != null) {
             boolean deleted = DatabaseHandler.deleteStudent(selectedStudent);
+            Alert alert;
             if (deleted) {
-                Alert alert = new Alert(AlertType.INFORMATION);
                 studentsList.remove(selectedStudent);
+                alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Success");
                 alert.setHeaderText(null);
                 alert.setContentText("Student deleted successfully!");
             } else {
-                Alert alert = new Alert(AlertType.ERROR);
-                alert = new javafx.scene.control.Alert(AlertType.ERROR);
+                alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
                 alert.setContentText("Failed to delete student.");
             }
+            alert.showAndWait();
         } else {
             Alert alert = new Alert(AlertType.WARNING);
             alert.setTitle("No Selection");
@@ -192,7 +189,7 @@ public class AdminStudentsController implements Initializable {
         studentsTable.setItems(filteredList);
     }
 
-    @FXML 
+    @FXML
     private void logoutButtonHandler() {
         try {
             Stage stage = (Stage) logoutButton.getScene().getWindow();
@@ -207,7 +204,7 @@ public class AdminStudentsController implements Initializable {
         }
     }
 
-    @FXML 
+    @FXML
     private void ictButtonHandler() {
         try {
             Stage stage = (Stage) ictButton.getScene().getWindow();
@@ -218,7 +215,7 @@ public class AdminStudentsController implements Initializable {
             e.printStackTrace();
         }
     }
-    
+
     @FXML
     private void stembuttonHandler() {
         try {
@@ -233,27 +230,28 @@ public class AdminStudentsController implements Initializable {
 
     @FXML
     public void adminButtonHandler(javafx.event.ActionEvent event) throws IOException {
-    Parent adminRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/Admin/FXML/addAdmin.fxml"));
-    Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-    stage.setScene(new Scene(adminRoot, 1000, 600));
+        Parent adminRoot = FXMLLoader.load(getClass().getResource("/Admin/FXML/addAdmin.fxml"));
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(adminRoot, 1000, 600));
     }
 
     @FXML
-     public void adminbillingsButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent billingsRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/Admin/FXML/BillingsAdmin.fxml"));
+    public void adminbillingsButtonHandler(javafx.event.ActionEvent event) throws IOException {
+        Parent billingsRoot = FXMLLoader.load(getClass().getResource("/Admin/FXML/BillingsAdmin.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(billingsRoot, 1000, 600));
-     }
-     @FXML
-     public void dashboardadminbuttonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent adminRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/Admin/FXML/AdminPage.fxml"));
+    }
+
+    @FXML
+    public void dashboardadminbuttonHandler(javafx.event.ActionEvent event) throws IOException {
+        Parent adminRoot = FXMLLoader.load(getClass().getResource("/Admin/FXML/AdminPage.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(adminRoot, 1000, 600));
-     }
+    }
 
-      @FXML
+    @FXML
     public void goTobadgesHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent badgesRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/Admin/FXML/BadgesAdmin.fxml"));
+        Parent badgesRoot = FXMLLoader.load(getClass().getResource("/Admin/FXML/BadgesAdmin.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(badgesRoot, 1000, 600));
     }

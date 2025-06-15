@@ -12,15 +12,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
-import javafx.application.Platform;
 import javafx.scene.Node;
 
 public class StemFreeUserToPremController implements Initializable {
@@ -51,9 +47,9 @@ public class StemFreeUserToPremController implements Initializable {
     }
 
     private void loadPlanTypes() {
-        ObservableList<String> planTypes = FXCollections.observableArrayList("Subscribed"); // Fixed plan type
+        ObservableList<String> planTypes = FXCollections.observableArrayList("Subscribed");
         subscriptionCombo.setItems(planTypes);
-        subscriptionCombo.getSelectionModel().selectFirst(); 
+        subscriptionCombo.getSelectionModel().selectFirst();
     }
 
     @FXML
@@ -83,7 +79,6 @@ public class StemFreeUserToPremController implements Initializable {
             alert.setContentText("Your account has been upgraded. The window will now close.");
             alert.showAndWait();
 
-            // Close only the current window
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.close();
 

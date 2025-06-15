@@ -6,11 +6,9 @@ import java.sql.ResultSet;
 import java.util.ResourceBundle;
 
 import org.controlsfx.control.textfield.CustomTextField;
-
 import com.jfoenix.controls.JFXButton;
 
 import Admin.Controllers.StudentsCRUD.StudentsCreateController;
-import Admin.Controllers.AdminStudentsICTController;
 import Data.Students;
 import Database.DatabaseHandler;
 import javafx.collections.FXCollections;
@@ -32,7 +30,6 @@ import javafx.stage.StageStyle;
 
 public class AdminStudentsICTController implements Initializable {
 
-
     ObservableList<Students> studentsictList = FXCollections.observableArrayList();
 
     @FXML
@@ -42,7 +39,7 @@ public class AdminStudentsICTController implements Initializable {
     private JFXButton createButton, deleteButton;
 
     @FXML
-    private TableView<Students> studentsictTable; 
+    private TableView<Students> studentsictTable;
 
     @FXML
     private TableColumn<Students, Integer> userIDColumn;
@@ -64,7 +61,6 @@ public class AdminStudentsICTController implements Initializable {
         passwordColumn.setCellValueFactory(new PropertyValueFactory<>("password"));
         createdColumn.setCellValueFactory(new PropertyValueFactory<>("created"));
 
-                // Mask password column with asterisks
         passwordColumn.setCellFactory(column -> new javafx.scene.control.TableCell<Students, String>() {
             @Override
             protected void updateItem(String password, boolean empty) {
@@ -72,11 +68,10 @@ public class AdminStudentsICTController implements Initializable {
                 if (empty || password == null) {
                     setText(null);
                 } else {
-                    setText("•".repeat(password.length())); // or use "*" if you prefer
+                    setText("•".repeat(password.length()));
                 }
             }
         });
-
 
         displayStudents();
     }
@@ -108,7 +103,7 @@ public class AdminStudentsICTController implements Initializable {
             e.printStackTrace();
         }
 
-        studentsictTable.setItems(studentsictList); 
+        studentsictTable.setItems(studentsictList);
     }
 
     @FXML
@@ -133,7 +128,7 @@ public class AdminStudentsICTController implements Initializable {
 
     @FXML
     private void updateButtonHandler() {
-        Students selectedStudent = studentsictTable.getSelectionModel().getSelectedItem(); 
+        Students selectedStudent = studentsictTable.getSelectionModel().getSelectedItem();
         if (selectedStudent == null) {
             Alert alert = new Alert(AlertType.WARNING);
             alert.setTitle("No Selection");
@@ -163,21 +158,23 @@ public class AdminStudentsICTController implements Initializable {
 
     @FXML
     private void deleteButtonHandler() {
-        Students selectedStudent = studentsictTable.getSelectionModel().getSelectedItem(); 
+        Students selectedStudent = studentsictTable.getSelectionModel().getSelectedItem();
         if (selectedStudent != null) {
             boolean deleted = DatabaseHandler.deleteStudent(selectedStudent);
+            Alert alert;
             if (deleted) {
-                Alert alert = new Alert(AlertType.INFORMATION);
                 studentsictList.remove(selectedStudent);
+                alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Success");
                 alert.setHeaderText(null);
                 alert.setContentText("Student deleted successfully!");
             } else {
-                Alert alert = new Alert(AlertType.ERROR);
+                alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
                 alert.setContentText("Failed to delete student.");
             }
+            alert.showAndWait();
         } else {
             Alert alert = new Alert(AlertType.WARNING);
             alert.setTitle("No Selection");
@@ -201,10 +198,10 @@ public class AdminStudentsICTController implements Initializable {
             }
         }
 
-        studentsictTable.setItems(filteredList); 
+        studentsictTable.setItems(filteredList);
     }
 
-    @FXML 
+    @FXML
     private void logoutButtonHandler() {
         try {
             Stage stage = (Stage) logoutButton.getScene().getWindow();
@@ -219,7 +216,7 @@ public class AdminStudentsICTController implements Initializable {
         }
     }
 
-    @FXML 
+    @FXML
     private void stemButtonHandler() {
         try {
             Stage stage = (Stage) stemButton.getScene().getWindow();
@@ -243,29 +240,30 @@ public class AdminStudentsICTController implements Initializable {
         }
     }
 
-     @FXML
+    @FXML
     public void adminButtonHandler(javafx.event.ActionEvent event) throws IOException {
-    Parent adminRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/Admin/FXML/addAdmin.fxml"));
-    Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-    stage.setScene(new Scene(adminRoot, 1000, 600));
+        Parent adminRoot = FXMLLoader.load(getClass().getResource("/Admin/FXML/addAdmin.fxml"));
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(adminRoot, 1000, 600));
     }
 
     @FXML
-     public void adminbillingsButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent billingsRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/Admin/FXML/BillingsAdmin.fxml"));
+    public void adminbillingsButtonHandler(javafx.event.ActionEvent event) throws IOException {
+        Parent billingsRoot = FXMLLoader.load(getClass().getResource("/Admin/FXML/BillingsAdmin.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(billingsRoot, 1000, 600));
-     }
-     @FXML
-     public void dashboardadminbuttonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent adminRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/Admin/FXML/AdminPage.fxml"));
+    }
+
+    @FXML
+    public void dashboardadminbuttonHandler(javafx.event.ActionEvent event) throws IOException {
+        Parent adminRoot = FXMLLoader.load(getClass().getResource("/Admin/FXML/AdminPage.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(adminRoot, 1000, 600));
-     }
+    }
 
-     @FXML
+    @FXML
     public void goTobadgesHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent badgesRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/Admin/FXML/BadgesAdmin.fxml"));
+        Parent badgesRoot = FXMLLoader.load(getClass().getResource("/Admin/FXML/BadgesAdmin.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(badgesRoot, 1000, 600));
     }

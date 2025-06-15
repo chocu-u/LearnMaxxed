@@ -7,9 +7,7 @@ import com.jfoenix.controls.JFXComboBox;
 
 import Data.Session;
 import Data.Students;
-import VideoMaterials.ICT.Controllers.IllustrationChap2VidController;
 import VideoMaterials.ICT.Controllers.IllustrationChap3VidController;
-import VideoMaterials.STEM.Controllers.BasicCalChap2VidController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,7 +20,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.stage.Stage;
 
 public class IllustrationChap3Controller {
-    
+
     @FXML
     private Button ComSysButton1;
 
@@ -70,150 +68,147 @@ public class IllustrationChap3Controller {
     }
 
     @FXML
-void comsys1ButtonHandler(ActionEvent event) {
-    try {
-        Parent root = FXMLLoader.load(getClass().getResource("/LearningMaterials/ICT/ILLUSTRATION/FXML/IllustrationChap1.fxml"));
-        Stage stage = (Stage) ComSysButton1.getScene().getWindow();
-        stage.setScene(new Scene(root, 1000, 600));
-        stage.setTitle("Illustration - Chapter 1");
-        stage.show();
-    } catch (IOException e) {
-        e.printStackTrace();
+    void comsys1ButtonHandler(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/LearningMaterials/ICT/ILLUSTRATION/FXML/IllustrationChap1.fxml"));
+            Stage stage = (Stage) ComSysButton1.getScene().getWindow();
+            stage.setScene(new Scene(root, 1000, 600));
+            stage.setTitle("Illustration - Chapter 1");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-}
 
-@FXML
-void comsys2ButtonHandler(ActionEvent event) {
-    try {
-        Parent root = FXMLLoader.load(getClass().getResource("/LearningMaterials/ICT/ILLUSTRATION/FXML/IllustrationChap2.fxml"));
-        Stage stage = (Stage) ComSysButton2.getScene().getWindow();
-        stage.setScene(new Scene(root, 1000, 600));
-        stage.setTitle("Illustration - Chapter 2");
-        stage.show();
-    } catch (IOException e) {
-        e.printStackTrace();
+    @FXML
+    void comsys2ButtonHandler(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/LearningMaterials/ICT/ILLUSTRATION/FXML/IllustrationChap2.fxml"));
+            Stage stage = (Stage) ComSysButton2.getScene().getWindow();
+            stage.setScene(new Scene(root, 1000, 600));
+            stage.setTitle("Illustration - Chapter 2");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-}
 
-@FXML
-void comsys3ButtonHandler(ActionEvent event) {
-    try {
-        Parent root = FXMLLoader.load(getClass().getResource("/LearningMaterials/ICT/ILLUSTRATION/FXML/IllustrationChap3.fxml"));
-        Stage stage = (Stage) ComSysButton3.getScene().getWindow();
-        stage.setScene(new Scene(root, 1000, 600));
-        stage.setTitle("Illustration - Chapter 3");
-        stage.show();
-    } catch (IOException e) {
-        e.printStackTrace();
+    @FXML
+    void comsys3ButtonHandler(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/LearningMaterials/ICT/ILLUSTRATION/FXML/IllustrationChap3.fxml"));
+            Stage stage = (Stage) ComSysButton3.getScene().getWindow();
+            stage.setScene(new Scene(root, 1000, 600));
+            stage.setTitle("Illustration - Chapter 3");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-}
 
     @FXML
     public void dashboardButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent dashboardRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/User/FXML/IctDashboard.fxml"));
+        Parent dashboardRoot = FXMLLoader.load(getClass().getResource("/User/FXML/IctDashboard.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(dashboardRoot, 1000, 600));
     }
 
-@FXML
-public void handleSubjectSelection() {
-    String selected = subjectComboBox.getSelectionModel().getSelectedItem();
-    try {
-        if ("Computer Programming".equals(selected)) {
-            Parent root = FXMLLoader.load(getClass().getResource("/LearningMaterials/ICT/COMPUTERPROGRAMMING/FXML/ComProgIntro.fxml"));
-            Stage stage = (Stage) subjectComboBox.getScene().getWindow();
-            stage.setScene(new Scene(root, 1000, 600));
-            stage.setTitle("Computer Programming Introduction");
-            stage.show();
-        } else if ("Computer Systems".equals(selected)) {
-            Parent root = FXMLLoader.load(getClass().getResource("/LearningMaterials/ICT/COMPUTERSYSTEMS/FXML/ComSysIntro.fxml"));
-            Stage stage = (Stage) subjectComboBox.getScene().getWindow();
-            stage.setScene(new Scene(root, 1000, 600));
-            stage.setTitle("Computer Systems Introduction");
-            stage.show();
-        } else if ("Web Development".equals(selected)) {
-            Parent root = FXMLLoader.load(getClass().getResource("/LearningMaterials/ICT/WEBDEVELOPMENT/FXML/WebDevIntro.fxml"));
-            Stage stage = (Stage) subjectComboBox.getScene().getWindow();
-            stage.setScene(new Scene(root, 1000, 600));
-            stage.setTitle("Web Development Introduction");
-            stage.show();
-        } else if ("Animation".equals(selected)) {
-            Parent root = FXMLLoader.load(getClass().getResource("/LearningMaterials/ICT/ANIMATION/FXML/AnimationIntro.fxml"));
-            Stage stage = (Stage) subjectComboBox.getScene().getWindow();
-            stage.setScene(new Scene(root, 1000, 600));
-            stage.setTitle("Animation Introduction");
-            stage.show();
-        } else if ("Illustration".equals(selected)) {
-            Parent root = FXMLLoader.load(getClass().getResource("/LearningMaterials/ICT/ILLUSTRATION/FXML/IllustrationIntro.fxml"));
-            Stage stage = (Stage) subjectComboBox.getScene().getWindow();
-            stage.setScene(new Scene(root, 1000, 600));
-            stage.setTitle("Illustration Introduction");
-            stage.show();
+    @FXML
+    public void handleSubjectSelection() {
+        String selected = subjectComboBox.getSelectionModel().getSelectedItem();
+        try {
+            if ("Computer Programming".equals(selected)) {
+                Parent root = FXMLLoader.load(getClass().getResource("/LearningMaterials/ICT/COMPUTERPROGRAMMING/FXML/ComProgIntro.fxml"));
+                Stage stage = (Stage) subjectComboBox.getScene().getWindow();
+                stage.setScene(new Scene(root, 1000, 600));
+                stage.setTitle("Computer Programming Introduction");
+                stage.show();
+            } else if ("Computer Systems".equals(selected)) {
+                Parent root = FXMLLoader.load(getClass().getResource("/LearningMaterials/ICT/COMPUTERSYSTEMS/FXML/ComSysIntro.fxml"));
+                Stage stage = (Stage) subjectComboBox.getScene().getWindow();
+                stage.setScene(new Scene(root, 1000, 600));
+                stage.setTitle("Computer Systems Introduction");
+                stage.show();
+            } else if ("Web Development".equals(selected)) {
+                Parent root = FXMLLoader.load(getClass().getResource("/LearningMaterials/ICT/WEBDEVELOPMENT/FXML/WebDevIntro.fxml"));
+                Stage stage = (Stage) subjectComboBox.getScene().getWindow();
+                stage.setScene(new Scene(root, 1000, 600));
+                stage.setTitle("Web Development Introduction");
+                stage.show();
+            } else if ("Animation".equals(selected)) {
+                Parent root = FXMLLoader.load(getClass().getResource("/LearningMaterials/ICT/ANIMATION/FXML/AnimationIntro.fxml"));
+                Stage stage = (Stage) subjectComboBox.getScene().getWindow();
+                stage.setScene(new Scene(root, 1000, 600));
+                stage.setTitle("Animation Introduction");
+                stage.show();
+            } else if ("Illustration".equals(selected)) {
+                Parent root = FXMLLoader.load(getClass().getResource("/LearningMaterials/ICT/ILLUSTRATION/FXML/IllustrationIntro.fxml"));
+                Stage stage = (Stage) subjectComboBox.getScene().getWindow();
+                stage.setScene(new Scene(root, 1000, 600));
+                stage.setTitle("Illustration Introduction");
+                stage.show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
     }
-}
 
     @FXML
     public void logoutButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent logoutRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/Login/FXML/LoginPage.fxml"));
+        Parent logoutRoot = FXMLLoader.load(getClass().getResource("/Login/FXML/LoginPage.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(logoutRoot, 1000, 600));
     }
 
     @FXML
-public void nextButtonHandler(ActionEvent event) {
-    
-}
+    public void nextButtonHandler(ActionEvent event) {
+        // No next chapter, so do nothing or show a message if needed
+    }
 
-@FXML
+    @FXML
     public void premDashboardButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent dashboardRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/User/FXML/PremiumDashboard.fxml"));
+        Parent dashboardRoot = FXMLLoader.load(getClass().getResource("/User/FXML/PremiumDashboard.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(dashboardRoot, 1000, 600));
     }
 
     @FXML
     public void premnextButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        
+        // No next premium chapter, so do nothing or show a message if needed
     }
 
     @FXML
     public void premillustration1ButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent illustration1Root = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/IllustrationChap1.fxml"));
+        Parent illustration1Root = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/IllustrationChap1.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(illustration1Root, 1000, 600));
     }
 
     @FXML
     public void premillustration2ButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent illustration2Root = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/IllustrationChap2.fxml"));
+        Parent illustration2Root = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/IllustrationChap2.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(illustration2Root, 1000, 600));
     }
 
     @FXML
     public void premillustration3ButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent illustration3Root = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/IllustrationChap3.fxml"));
+        Parent illustration3Root = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/IllustrationChap3.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(illustration3Root, 1000, 600));
     }
 
     @FXML
     public void playVidHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent vidRoot = FXMLLoader.load(getClass().getResource("/VideoMaterials/ICT/FXML/IllustrationChap3Vid.fxml"));
-        Stage vidStage = new Stage();
-        vidStage.setTitle("Ilustration Chapter 3 Video");
-        vidStage.setScene(new Scene(vidRoot, 1280, 800));
-        vidStage.setResizable(false);
-
-        // Get the controller to access the mediaPlayer
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/VideoMaterials/ICT/FXML/IllustrationChap3Vid.fxml"));
         Parent root = loader.load();
         IllustrationChap3VidController controller = loader.getController();
 
+        Stage vidStage = new Stage();
+        vidStage.setTitle("Illustration Chapter 3 Video");
         vidStage.setScene(new Scene(root, 1280, 800));
+        vidStage.setResizable(false);
+
         vidStage.setOnCloseRequest(e -> {
             if (controller != null && controller.getMediaPlayer() != null) {
                 controller.getMediaPlayer().stop();
@@ -223,8 +218,6 @@ public void nextButtonHandler(ActionEvent event) {
         vidStage.show();
     }
 
-    
-
     @FXML
     private void finishButtonHandler(javafx.event.ActionEvent event) throws IOException {
         boolean badgeAdded = false;
@@ -232,7 +225,6 @@ public void nextButtonHandler(ActionEvent event) {
         if (Data.Session.getLoggedInStudent() != null) {
             int userID = Data.Session.getLoggedInStudent().getUserID();
             badgeAdded = Database.DatabaseHandler.addBadgeIfAllowed(userID, "Illustration");
-            // Check if the user already has the badge
             if (!badgeAdded && Database.DatabaseHandler.hasBadge(userID, "Illustration")) {
                 alreadyHasBadge = true;
             }
@@ -242,7 +234,7 @@ public void nextButtonHandler(ActionEvent event) {
         if (badgeAdded) {
             fxmlPath = "/User/FXML/Congratulations.fxml";
         } else if (alreadyHasBadge) {
-            fxmlPath = "/User/FXML/AlreadyHasBadge.fxml"; // Create this FXML for a custom message
+            fxmlPath = "/User/FXML/AlreadyHasBadge.fxml";
         } else {
             fxmlPath = "/User/FXML/CongratulationsNoBadge.fxml";
         }
@@ -259,6 +251,5 @@ public void nextButtonHandler(ActionEvent event) {
         popupStage.setResizable(false);
         popupStage.showAndWait();
     }
-
 }
 

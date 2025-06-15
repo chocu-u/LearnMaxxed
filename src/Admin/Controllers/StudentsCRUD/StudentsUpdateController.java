@@ -5,12 +5,11 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import org.controlsfx.control.textfield.CustomTextField;
-
 import com.jfoenix.controls.JFXButton;
 
 import Admin.Controllers.AdminStudentsController;
-import Admin.Controllers.AdminStudentsICTController; 
-import Admin.Controllers.AdminStudentsSTEMController; 
+import Admin.Controllers.AdminStudentsICTController;
+import Admin.Controllers.AdminStudentsSTEMController;
 import Data.Students;
 import Database.DatabaseHandler;
 import Utils.InputValidator;
@@ -24,11 +23,12 @@ import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 
 public class StudentsUpdateController implements Initializable {
+
     ObservableList<Students> studentsTable = FXCollections.observableArrayList();
     private AdminStudentsController parentController;
-    private AdminStudentsICTController parentICTController; 
-    private AdminStudentsSTEMController parentSTEMController; 
-    private Students selectedStudent; 
+    private AdminStudentsICTController parentICTController;
+    private AdminStudentsSTEMController parentSTEMController;
+    private Students selectedStudent;
 
     @FXML
     private JFXButton cancelButton, updateAccountButton;
@@ -45,7 +45,6 @@ public class StudentsUpdateController implements Initializable {
         loadStrands();
         loadPlanTypes();
 
-        // Add this block to handle enabling/disabling paymentCombo
         subscriptionCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
             if ("Free".equalsIgnoreCase(newVal)) {
                 paymentCombo.setDisable(true);
@@ -55,7 +54,6 @@ public class StudentsUpdateController implements Initializable {
             }
         });
 
-        // Optionally, set initial state on paymentCombo based on the current value of subscriptionCombo
         if ("Free".equalsIgnoreCase(subscriptionCombo.getValue())) {
             paymentCombo.setDisable(true);
         } else {
@@ -129,7 +127,6 @@ public class StudentsUpdateController implements Initializable {
             return;
         }
 
-        // Add this validation before proceeding
         String validationError = InputValidator.validateStudentFields(username, fname, lname, email, password);
         if (validationError != null) {
             showAlert(AlertType.ERROR, validationError);
@@ -137,7 +134,7 @@ public class StudentsUpdateController implements Initializable {
         }
 
         // Plan type logic
-        int paymentID = -1; // Default for free plan
+        int paymentID = -1;
         if (planType.equalsIgnoreCase("Free")) {
             if (!paymentMethod.isEmpty()) {
                 showAlert(AlertType.ERROR, "You have chosen Free Plan Type. Payment method should not be selected.");

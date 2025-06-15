@@ -60,7 +60,6 @@ public class SignupController implements Initializable {
             eyeIcon.setImage(eyeoff);
         }
 
-        // Add this block to handle enabling/disabling paymentCombo
         planTypeCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
             if ("Free".equalsIgnoreCase(newVal)) {
                 paymentCombo.setDisable(true);
@@ -70,7 +69,6 @@ public class SignupController implements Initializable {
             }
         });
 
-        // Optionally, set initial state on load
         if ("Free".equalsIgnoreCase(planTypeCombo.getValue())) {
             paymentCombo.setDisable(true);
         } else {

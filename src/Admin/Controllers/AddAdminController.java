@@ -1,17 +1,15 @@
 package Admin.Controllers;
 
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.util.ResourceBundle;
 
 import org.controlsfx.control.textfield.CustomTextField;
-
 import com.jfoenix.controls.JFXButton;
 
 import Admin.Controllers.AdminCRUD.AdminCreateController;
-import Admin.Controllers.AdminCRUD.AdminUpdateController; 
+import Admin.Controllers.AdminCRUD.AdminUpdateController;
 
 import Data.Admin;
 import Database.DatabaseHandler;
@@ -28,7 +26,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-
 
 public class AddAdminController implements Initializable {
 
@@ -64,7 +61,6 @@ public class AddAdminController implements Initializable {
 
     private ObservableList<Admin> adminList = FXCollections.observableArrayList();
 
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         adminIDColumn.setCellValueFactory(new PropertyValueFactory<>("adminID"));
@@ -78,7 +74,7 @@ public class AddAdminController implements Initializable {
                 if (empty || password == null) {
                     setText(null);
                 } else {
-                    setText("•".repeat(password.length())); 
+                    setText("•".repeat(password.length()));
                 }
             }
         });
@@ -111,102 +107,101 @@ public class AddAdminController implements Initializable {
 
     @FXML
     private void adminCreateButtonHandler() {
-    try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Admin/FXML/adminCreatePopup.fxml"));
-        Parent root = loader.load();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Admin/FXML/adminCreatePopup.fxml"));
+            Parent root = loader.load();
 
-        AdminCreateController createController = loader.getController();
-        createController.setParentController(this);
-        Stage popupStage = new javafx.stage.Stage();
-        popupStage.setTitle("Create Admin");
-        popupStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-        popupStage.initStyle(javafx.stage.StageStyle.UNDECORATED);
-        popupStage.setScene(new Scene(root));
-        popupStage.showAndWait();
+            AdminCreateController createController = loader.getController();
+            createController.setParentController(this);
+            Stage popupStage = new Stage();
+            popupStage.setTitle("Create Admin");
+            popupStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            popupStage.initStyle(javafx.stage.StageStyle.UNDECORATED);
+            popupStage.setScene(new Scene(root));
+            popupStage.showAndWait();
 
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}   
-
-@FXML
-private void AdminUpdateButtonHandler() { // <-- lowercase 'a'
-    Admin selectedAdmin = adminTable.getSelectionModel().getSelectedItem();
-    if (selectedAdmin == null) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("No Selection");
-        alert.setHeaderText(null);
-        alert.setContentText("No admin selected.");
-        alert.showAndWait();
-        return;
-    }
-    try {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Admin/FXML/adminUpdatePopup.fxml"));
-        Parent root = loader.load();
-
-        AdminUpdateController updateController = loader.getController();
-        updateController.setParentController(this);
-        updateController.setAdminToUpdate(selectedAdmin);
-
-        Stage popupStage = new Stage();
-        popupStage.setTitle("Update Admin");
-        popupStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-        popupStage.initStyle(javafx.stage.StageStyle.UNDECORATED);
-        popupStage.setScene(new Scene(root));
-        popupStage.showAndWait();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
-
-@FXML
-private void adminDeleteButtonHandler() {
-    Admin selectedAdmin = adminTable.getSelectionModel().getSelectedItem();
-
-    if (selectedAdmin != null) {
-        boolean deleted = DatabaseHandler.deleteAdmin(selectedAdmin);
-        Alert alert;
-        if (deleted) {
-            adminList.remove(selectedAdmin);
-            alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Success");
-            alert.setHeaderText(null);
-            alert.setContentText("Admin deleted successfully!");
-        } else {
-            alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText("Failed to delete admin.");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        alert.showAndWait();
-    } else {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("No Selection");
-        alert.setHeaderText(null);
-        alert.setContentText("No admin selected.");
-        alert.showAndWait();
     }
-}
 
-@FXML
-private void logoutButtonHandler(javafx.event.ActionEvent event) {
-    try {
-        // If you have a logout button, get the stage from it, or from the event
-        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        stage.close();
-        Parent root = FXMLLoader.load(getClass().getResource("/Login/FXML/LoginPage.fxml"));
-        Stage newStage = new Stage();
-        newStage.setTitle("Login");
-        newStage.setScene(new Scene(root, 1000, 600));
-        newStage.show();
-    } catch (Exception e) {
-        e.printStackTrace();
+    @FXML
+    private void AdminUpdateButtonHandler() {
+        Admin selectedAdmin = adminTable.getSelectionModel().getSelectedItem();
+        if (selectedAdmin == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No Selection");
+            alert.setHeaderText(null);
+            alert.setContentText("No admin selected.");
+            alert.showAndWait();
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Admin/FXML/adminUpdatePopup.fxml"));
+            Parent root = loader.load();
+
+            AdminUpdateController updateController = loader.getController();
+            updateController.setParentController(this);
+            updateController.setAdminToUpdate(selectedAdmin);
+
+            Stage popupStage = new Stage();
+            popupStage.setTitle("Update Admin");
+            popupStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            popupStage.initStyle(javafx.stage.StageStyle.UNDECORATED);
+            popupStage.setScene(new Scene(root));
+            popupStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-}
 
-    @FXML 
+    @FXML
+    private void adminDeleteButtonHandler() {
+        Admin selectedAdmin = adminTable.getSelectionModel().getSelectedItem();
+
+        if (selectedAdmin != null) {
+            boolean deleted = DatabaseHandler.deleteAdmin(selectedAdmin);
+            Alert alert;
+            if (deleted) {
+                adminList.remove(selectedAdmin);
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setHeaderText(null);
+                alert.setContentText("Admin deleted successfully!");
+            } else {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("Failed to delete admin.");
+            }
+            alert.showAndWait();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No Selection");
+            alert.setHeaderText(null);
+            alert.setContentText("No admin selected.");
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    private void logoutButtonHandler(javafx.event.ActionEvent event) {
+        try {
+            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            stage.close();
+            Parent root = FXMLLoader.load(getClass().getResource("/Login/FXML/LoginPage.fxml"));
+            Stage newStage = new Stage();
+            newStage.setTitle("Login");
+            newStage.setScene(new Scene(root, 1000, 600));
+            newStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     private void goToStudentsButtonHandler() {
-         try {
+        try {
             Stage stage = (Stage) goToStudentsbutton.getScene().getWindow();
             Parent root = FXMLLoader.load(getClass().getResource("/Admin/FXML/Students.fxml"));
             stage.setTitle("Students");
@@ -228,7 +223,7 @@ private void logoutButtonHandler(javafx.event.ActionEvent event) {
         }
     }
 
-    @FXML 
+    @FXML
     private void goToBillingsButtonHandler() {
         try {
             Stage stage = (Stage) billingsButton.getScene().getWindow();
@@ -254,7 +249,7 @@ private void logoutButtonHandler(javafx.event.ActionEvent event) {
         adminTable.setItems(filteredList);
     }
 
-     @FXML
+    @FXML
     public void goTobadgesHandler(javafx.event.ActionEvent event) throws IOException {
         Parent badgesRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/Admin/FXML/BadgesAdmin.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();

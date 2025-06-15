@@ -189,9 +189,9 @@ public void handleSubjectSelection() {
 
     @FXML
     public void premcomsys2ButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent comsys3Root = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/ComSysChapter2.fxml"));
+        Parent comsys2Root = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/ComSysChapter2.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(comsys3Root, 1000, 600));
+        stage.setScene(new Scene(comsys2Root, 1000, 600));
     }
 
     @FXML
@@ -211,7 +211,7 @@ public void handleSubjectSelection() {
         if (badgeAdded) {
             fxmlPath = "/User/FXML/Congratulations.fxml";
         } else if (alreadyHasBadge) {
-            fxmlPath = "/User/FXML/AlreadyHasBadge.fxml"; // Create this FXML for a custom message
+            fxmlPath = "/User/FXML/AlreadyHasBadge.fxml"; 
         } else {
             fxmlPath = "/User/FXML/CongratulationsNoBadge.fxml";
         }

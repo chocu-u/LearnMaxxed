@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-// Import your DatabaseHandler class (adjust the package if needed)
 import Database.DatabaseHandler;
 
 public class BadgesCreateController implements Initializable {
@@ -28,10 +27,8 @@ public class BadgesCreateController implements Initializable {
     @FXML
     private JFXButton cancelButton;
 
-    // Store badge names and their IDs for easy lookup
     private final HashMap<String, Integer> badgeMap = new HashMap<>();
 
-    // The userID of the selected user (set by the parent controller)
     private int selectedUserID;
 
     @Override
@@ -39,7 +36,6 @@ public class BadgesCreateController implements Initializable {
         loadBadges();
     }
 
-    // Called by BadgesAdminController before showing the popup
     public void setSelectedUserID(int userID) {
         this.selectedUserID = userID;
     }

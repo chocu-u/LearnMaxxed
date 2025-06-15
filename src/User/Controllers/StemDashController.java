@@ -43,10 +43,8 @@ public class StemDashController {
     @FXML
     private Button logoutButton;
 
-     @FXML
+    @FXML
     private Button changetoPremiumButton, userdashboardbutton;
-
-    
 
     public void displayName(String name) {
         usernameSidePanel.setText(name);
@@ -72,44 +70,44 @@ public class StemDashController {
 
     @FXML
     public void logoutButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent logoutRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/Login/FXML/LoginPage.fxml"));
+        Parent logoutRoot = FXMLLoader.load(getClass().getResource("/Login/FXML/LoginPage.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(logoutRoot, 1000, 600));
     }
 
     @FXML
     public void chemistryButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent chemistryRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Chemistry/FXML/ChemChapter1.fxml"));
+        Parent chemistryRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Chemistry/FXML/ChemChapter1.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(chemistryRoot, 1000, 600));
     }
 
     @FXML
     public void physicsButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent physicsRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Physics/FXML/PhysicsIntro.fxml"));
+        Parent physicsRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Physics/FXML/PhysicsIntro.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(physicsRoot, 1000, 600));
     }
 
     @FXML
     public void biologyButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent physicsRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Biology/FXML/BioIntro.fxml"));
+        Parent biologyRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Biology/FXML/BioIntro.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(physicsRoot, 1000, 600));
+        stage.setScene(new Scene(biologyRoot, 1000, 600));
     }
 
     @FXML
     public void precalButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent physicsRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Precal/FXML/PCalIntro.fxml"));
+        Parent precalRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Precal/FXML/PCalIntro.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(physicsRoot, 1000, 600));
+        stage.setScene(new Scene(precalRoot, 1000, 600));
     }
 
     @FXML
     public void basicCalButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent physicsRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Basiccal/FXML/BasicCalIntro.fxml"));
+        Parent basicCalRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Basiccal/FXML/BasicCalIntro.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(physicsRoot, 1000, 600));
+        stage.setScene(new Scene(basicCalRoot, 1000, 600));
     }
 
     @FXML

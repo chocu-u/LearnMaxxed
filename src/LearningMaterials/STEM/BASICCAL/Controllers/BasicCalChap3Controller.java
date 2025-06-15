@@ -53,14 +53,14 @@ public class BasicCalChap3Controller {
 
     @FXML
     public void logoutButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent logoutRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/Login/FXML/LoginPage.fxml"));
+        Parent logoutRoot = FXMLLoader.load(getClass().getResource("/Login/FXML/LoginPage.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(logoutRoot, 1000, 600));
     }
 
     @FXML
     public void dashboardButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent dashboardRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/User/FXML/StemDashboard.fxml"));
+        Parent dashboardRoot = FXMLLoader.load(getClass().getResource("/User/FXML/StemDashboard.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(dashboardRoot, 1000, 600));
     }
@@ -79,12 +79,12 @@ public class BasicCalChap3Controller {
             } else if ("Biology".equals(selected)) {
                 Parent biologyRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Biology/FXML/BioIntro.fxml"));
                 stage.setScene(new Scene(biologyRoot, 1000, 600));
-            }else if ("Pre Calculus".equals(selected)) {
-                Parent biologyRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Precal/FXML/PCalIntro.fxml"));
-                stage.setScene(new Scene(biologyRoot, 1000, 600));
-            }else if ("Basic Calculus".equals(selected)) {
-                Parent biologyRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Basiccal/FXML/BasicCalIntro.fxml"));
-                stage.setScene(new Scene(biologyRoot, 1000, 600));
+            } else if ("Pre Calculus".equals(selected)) {
+                Parent pcalRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Precal/FXML/PCalIntro.fxml"));
+                stage.setScene(new Scene(pcalRoot, 1000, 600));
+            } else if ("Basic Calculus".equals(selected)) {
+                Parent basiccalRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Basiccal/FXML/BasicCalIntro.fxml"));
+                stage.setScene(new Scene(basiccalRoot, 1000, 600));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -105,12 +105,12 @@ public class BasicCalChap3Controller {
             } else if ("Biology".equals(selected)) {
                 Parent biologyRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/BioIntro.fxml"));
                 stage.setScene(new Scene(biologyRoot, 1000, 600));
-            }else if ("Pre Calculus".equals(selected)) {
-                Parent biologyRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/PCalIntro.fxml"));
-                stage.setScene(new Scene(biologyRoot, 1000, 600));
-            }else if ("Basic Calculus".equals(selected)) {
-                Parent biologyRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/BasicCalIntro.fxml"));
-                stage.setScene(new Scene(biologyRoot, 1000, 600));
+            } else if ("Pre Calculus".equals(selected)) {
+                Parent pcalRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/PCalIntro.fxml"));
+                stage.setScene(new Scene(pcalRoot, 1000, 600));
+            } else if ("Basic Calculus".equals(selected)) {
+                Parent basiccalRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/BasicCalIntro.fxml"));
+                stage.setScene(new Scene(basiccalRoot, 1000, 600));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -119,89 +119,83 @@ public class BasicCalChap3Controller {
 
     @FXML
     public void BasicCalIntroButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent BasicCalIntroRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Basiccal/FXML/BasicCalIntro.fxml"));
+        Parent BasicCalIntroRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Basiccal/FXML/BasicCalIntro.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(BasicCalIntroRoot, 1000, 600));
     }
 
     @FXML
     public void BasicCal1ButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent BasicCal1Root = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Basiccal/FXML/BasicCalChap1.fxml"));
+        Parent BasicCal1Root = FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Basiccal/FXML/BasicCalChap1.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(BasicCal1Root, 1000, 600));
     }
 
     @FXML
     public void BasicCal2ButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent BasicCal2Root = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Basiccal/FXML/BasicCalChap2.fxml"));
+        Parent BasicCal2Root = FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Basiccal/FXML/BasicCalChap2.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(BasicCal2Root, 1000, 600));
     }
 
-    //No next button function yet.
     @FXML 
     public void nextButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent nextRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/STEM/Physics/FXML/PhysicsChap3.fxml"));
-        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(nextRoot, 1000, 600));
+        // No next chapter, so do nothing or show a message if needed
     }
 
     @FXML
     public void premDashboardButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent dashboardRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/User/FXML/PremiumDashboard.fxml"));
+        Parent dashboardRoot = FXMLLoader.load(getClass().getResource("/User/FXML/PremiumDashboard.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(dashboardRoot, 1000, 600));
     }
 
     @FXML
     public void premnextButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent nextRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/BasicCalChap1.fxml"));
+        Parent nextRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/BasicCalChap1.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(nextRoot, 1000, 600));
     }
 
     @FXML
     public void premBasicCalIntroButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent premBasicCalIntroRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/BasicCalIntro.fxml"));
+        Parent premBasicCalIntroRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/BasicCalIntro.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(premBasicCalIntroRoot, 1000, 600));
     }
 
     @FXML
     public void premBasicCal1ButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent premBasicCal1Root = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/BasicCalChap1.fxml"));
+        Parent premBasicCal1Root = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/BasicCalChap1.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(premBasicCal1Root, 1000, 600));
     }
 
     @FXML
     public void premBasicCal2ButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent premBasicCal2Root = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/BasicCalChap2.fxml"));
+        Parent premBasicCal2Root = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/BasicCalChap2.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(premBasicCal2Root, 1000, 600));
     }
 
     @FXML
     public void playVidHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent vid4Root = FXMLLoader.load(getClass().getResource("/VideoMaterials/STEM/FXML/BasicCalChap3Vid.fxml"));
-        Stage vidStage4 = new Stage();
-        vidStage4.setTitle("Basic Calculus Chapter 2 Video");
-        vidStage4.setScene(new Scene(vid4Root, 1280, 800));
-        vidStage4.setResizable(false);
-
-        // Get the controller to access the mediaPlayer
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/VideoMaterials/STEM/FXML/BasicCalChap3Vid.fxml"));
         Parent root = loader.load();
         BasicCalChap3VidController controller = loader.getController();
 
-        vidStage4.setScene(new Scene(root, 1280, 800));
-        vidStage4.setOnCloseRequest(e -> {
+        Stage vidStage = new Stage();
+        vidStage.setTitle("Basic Calculus Chapter 3 Video");
+        vidStage.setScene(new Scene(root, 1280, 800));
+        vidStage.setResizable(false);
+
+        vidStage.setOnCloseRequest(e -> {
             if (controller != null && controller.getMediaPlayer() != null) {
                 controller.getMediaPlayer().stop();
             }
         });
 
-        vidStage4.show();
+        vidStage.show();
     }
 
     @FXML
@@ -221,7 +215,7 @@ public class BasicCalChap3Controller {
         if (badgeAdded) {
             fxmlPath = "/User/FXML/Congratulations.fxml";
         } else if (alreadyHasBadge) {
-            fxmlPath = "/User/FXML/AlreadyHasBadge.fxml"; // Create this FXML for a custom message
+            fxmlPath = "/User/FXML/AlreadyHasBadge.fxml"; 
         } else {
             fxmlPath = "/User/FXML/CongratulationsNoBadge.fxml";
         }

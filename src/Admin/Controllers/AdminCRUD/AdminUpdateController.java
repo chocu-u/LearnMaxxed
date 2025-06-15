@@ -16,6 +16,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
 public class AdminUpdateController implements Initializable {
+
     private AddAdminController parentController;
     private Admin selectedAdmin;
 
@@ -28,12 +29,12 @@ public class AdminUpdateController implements Initializable {
     @FXML
     private JFXButton cancelButton;
 
-      @FXML
+    @FXML
     private JFXButton updateAdminButton;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // No additional initialization needed
+       
     }
 
     public void setParentController(AddAdminController controller) {
@@ -85,7 +86,7 @@ public class AdminUpdateController implements Initializable {
             showAlert(AlertType.INFORMATION, "Admin account updated successfully!");
             ((Stage) updateAdminButton.getScene().getWindow()).close();
             if (parentController != null) {
-                parentController.displayAdmins(); // Refresh
+                parentController.displayAdmins(); 
             }
         } else {
             showAlert(AlertType.ERROR, "Failed to update admin account. Please try again.");

@@ -16,8 +16,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
 public class AdminCreateController implements Initializable {
-    
-    
+
     private AddAdminController parentController;
 
     @FXML
@@ -34,7 +33,7 @@ public class AdminCreateController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Optional: add any initialization logic here
+
     }
 
     public void setParentController(AddAdminController parentController) {

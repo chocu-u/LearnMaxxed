@@ -65,9 +65,6 @@ public class UserBadgesController {
         webdev.setImage(badge);
     }
 
-
-
-
     @FXML
     public void initialize() {
         Students student = Session.getLoggedInStudent();
@@ -129,21 +126,21 @@ public class UserBadgesController {
     @FXML
     public void backButtonHandler(javafx.event.ActionEvent event) throws IOException {
         Students student = Session.getLoggedInStudent();
-        String fxmlPath = "/User/FXML/PremiumDashboard.fxml"; // default
+        String fxmlPath = "/User/FXML/PremiumDashboard.fxml"; 
 
     if (student != null) {
         int subscriptionID = student.getSubscriptionID();
         if (subscriptionID == 1) {
             fxmlPath = "/User/FXML/PremiumDashboard.fxml"; // Subscribed users
         } else if (subscriptionID == 2) {
-            // Free users, you can further check strand if needed
+            // Free users
             String strand = student.getStrand();
             if ("ICT".equalsIgnoreCase(strand)) {
                 fxmlPath = "/User/FXML/IctDashboard.fxml";
             } else if ("STEM".equalsIgnoreCase(strand)) {
                 fxmlPath = "/User/FXML/StemDashboard.fxml";
             }
-            // Add more strands if needed
+
         }
     }
 

@@ -158,28 +158,28 @@ public class ComProgIntroController {
 
     @FXML
     public void premnextButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent nextRoot = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/ComProgChapter1.fxml"));
+        Parent nextRoot = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/ComProgChapter1.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(nextRoot, 1000, 600));
     }
 
     @FXML
     public void premcomprog1ButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent comprog1Root = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/ComProgChapter1.fxml"));
+        Parent comprog1Root = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/ComProgChapter1.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(comprog1Root, 1000, 600));
     }
 
     @FXML
     public void premcomprog2ButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent comprog2Root = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/ComProgChapter2.fxml"));
+        Parent comprog2Root = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/ComProgChapter2.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(comprog2Root, 1000, 600));
     }
 
     @FXML
     public void premcomprog3ButtonHandler(javafx.event.ActionEvent event) throws IOException {
-        Parent comprog3Root = javafx.fxml.FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/ComProgChapter3.fxml"));
+        Parent comprog3Root = FXMLLoader.load(getClass().getResource("/LearningMaterials/Premium/ComProgChapter3.fxml"));
         Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(comprog3Root, 1000, 600));
     }

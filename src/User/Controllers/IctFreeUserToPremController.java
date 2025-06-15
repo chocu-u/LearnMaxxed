@@ -53,7 +53,7 @@ public class IctFreeUserToPremController implements Initializable {
     }
 
     private void loadPlanTypes() {
-        ObservableList<String> planTypes = FXCollections.observableArrayList("Subscribed"); // Fixed plan type
+        ObservableList<String> planTypes = FXCollections.observableArrayList("Subscribed"); 
         subscriptionCombo.setItems(planTypes);
         subscriptionCombo.getSelectionModel().selectFirst(); 
     }
@@ -85,7 +85,7 @@ private void changetoPremiumButtonHandler(ActionEvent event) {
         alert.setContentText("Your account has been upgraded. Please re-login.");
         alert.showAndWait();
 
-        redirectToLogin(event); // ✅ use the event to close the current window
+        redirectToLogin(event); 
     } else {
         showAlert(Alert.AlertType.ERROR, "Upgrade failed. Please try again.");
     }

@@ -38,7 +38,6 @@ public class UserSettingsController {
         if (event != null) {
             stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
         } else {
-            // Fallback: get stage from any button (e.g., logoutButton)
             stage = (Stage) logoutButton.getScene().getWindow();
         }
         stage.setScene(new Scene(logoutRoot, 1000, 600));
@@ -71,43 +70,22 @@ public class UserSettingsController {
         Optional<String> result = dialog.showAndWait();
         result.ifPresent(newEmail -> {
             if (newEmail.trim().isEmpty()) {
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                alert.setTitle("Field is empty");
-                alert.setHeaderText(null);
-                alert.setContentText("Email field cannot be empty.");
-                alert.showAndWait();
+                showAlert("Field is empty", "Email field cannot be empty.");
                 return;
             }
             if (!newEmail.matches("^[\\w.-]+@[\\w.-]+\\.\\w{2,}$")) {
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                alert.setTitle("Invalid Email");
-                alert.setHeaderText(null);
-                alert.setContentText("Please enter a valid email address.");
-                alert.showAndWait();
+                showAlert("Invalid Email", "Please enter a valid email address.");
                 return;
             }
-            // Check if email is already taken
             if (DatabaseHandler.isEmailTaken(newEmail)) {
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                alert.setTitle("Email In Use");
-                alert.setHeaderText(null);
-                alert.setContentText("This email is already registered to another user.");
-                alert.showAndWait();
+                showAlert("Email In Use", "This email is already registered to another user.");
                 return;
             }
             boolean success = DatabaseHandler.changeEmail(student.getUsername(), newEmail);
             if (success) {
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-                alert.setTitle("Success");
-                alert.setHeaderText(null);
-                alert.setContentText("Email updated successfully!");
-                alert.showAndWait();
+                showAlert("Success", "Email updated successfully!");
             } else {
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("Failed to update email.");
-                alert.showAndWait();
+                showAlert("Error", "Failed to update email.");
             }
         });
     }
@@ -124,13 +102,11 @@ public class UserSettingsController {
         javafx.scene.control.ButtonType okButtonType = new javafx.scene.control.ButtonType("OK", javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(okButtonType, javafx.scene.control.ButtonType.CANCEL);
 
-        // Password fields (hidden and visible)
         javafx.scene.control.PasswordField newPasswordField = new javafx.scene.control.PasswordField();
         javafx.scene.control.PasswordField confirmPasswordField = new javafx.scene.control.PasswordField();
         javafx.scene.control.TextField newPasswordTextField = new javafx.scene.control.TextField();
         javafx.scene.control.TextField confirmPasswordTextField = new javafx.scene.control.TextField();
 
-        // Bind visible and hidden fields
         newPasswordTextField.managedProperty().bind(newPasswordTextField.visibleProperty());
         newPasswordField.managedProperty().bind(newPasswordField.visibleProperty());
         newPasswordTextField.visibleProperty().set(false);
@@ -144,7 +120,6 @@ public class UserSettingsController {
         newPasswordTextField.textProperty().bindBidirectional(newPasswordField.textProperty());
         confirmPasswordTextField.textProperty().bindBidirectional(confirmPasswordField.textProperty());
 
-        // Checkbox to show/hide password
         javafx.scene.control.CheckBox showPasswordCheckBox = new javafx.scene.control.CheckBox("Show Passwords");
         showPasswordCheckBox.selectedProperty().addListener((obs, wasSelected, isSelected) -> {
             newPasswordField.setVisible(!isSelected);
@@ -153,7 +128,6 @@ public class UserSettingsController {
             confirmPasswordTextField.setVisible(isSelected);
         });
 
-        // Layout
         javafx.scene.layout.GridPane grid = new javafx.scene.layout.GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
@@ -207,7 +181,6 @@ public class UserSettingsController {
         Students student = Session.getLoggedInStudent();
         if (student == null) return;
 
-        // Create a custom dialog for both first and last name
         javafx.scene.control.Dialog<String[]> dialog = new javafx.scene.control.Dialog<>();
         dialog.setTitle("Change Name");
         dialog.setHeaderText("Change your name");
@@ -251,7 +224,7 @@ public class UserSettingsController {
                 showAlert("Invalid Last Name", "Last name must be at least 2 letters and contain only letters.");
                 return;
             }
-            
+
             String finalFirstName = newFirstName.isEmpty() ? student.getFirstName() : newFirstName;
             String finalLastName = newLastName.isEmpty() ? student.getLastName() : newLastName;
 
@@ -259,7 +232,7 @@ public class UserSettingsController {
             if (success) {
                 showAlert("Success", "Name updated successfully!");
                 try {
-                    logoutButtonHandler(null); // Logout after successful name change
+                    logoutButtonHandler(null);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -283,7 +256,6 @@ public class UserSettingsController {
         javafx.scene.control.ButtonType cancelButton = new javafx.scene.control.ButtonType("Cancel", javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(confirmButton, cancelButton);
 
-        // Add checkbox
         javafx.scene.control.CheckBox understandCheckBox = new javafx.scene.control.CheckBox("Yes, I Understand.");
         javafx.scene.layout.VBox vbox = new javafx.scene.layout.VBox();
         vbox.setSpacing(10);
@@ -292,7 +264,6 @@ public class UserSettingsController {
             understandCheckBox);
         alert.getDialogPane().setContent(vbox);
 
-        // Disable Delete button until checkbox is checked
         javafx.scene.control.Button deleteBtn = (javafx.scene.control.Button) alert.getDialogPane().lookupButton(confirmButton);
         deleteBtn.setDisable(true);
         understandCheckBox.selectedProperty().addListener((obs, oldVal, newVal) -> {
@@ -305,7 +276,7 @@ public class UserSettingsController {
             if (success) {
                 showAlert("Success", "Account deleted successfully!");
                 try {
-                    logoutButtonHandler(null); // Logout after successful deletion
+                    logoutButtonHandler(null);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

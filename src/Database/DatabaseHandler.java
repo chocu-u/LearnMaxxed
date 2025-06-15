@@ -78,7 +78,7 @@ public class DatabaseHandler {
     }
 
     public static boolean usernameExists(String username) {
-    return isUsernameTaken(username);
+        return isUsernameTaken(username);
     }
 
     public static boolean isEmailTaken(String email) {
@@ -127,7 +127,7 @@ public class DatabaseHandler {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false; 
+        return false;
     }
 
     public static boolean changePassword(String username, String newPassword) {
@@ -185,109 +185,101 @@ public class DatabaseHandler {
 
     /////////////////////////// Badges (Getting) ///////////////////////////////
     public static boolean addBadgeIfAllowed(int userID, String badgeName) {
-    String getSubscriptionSql = "SELECT SubscriptionID FROM User WHERE UserID = ?";
-    String countBadgesSql = "SELECT COUNT(*) FROM UserBadge WHERE UserID = ?";
-    String insertBadgeSql = """
-        INSERT INTO UserBadge (UserID, BadgeID)
-        VALUES (?, (SELECT BadgeID FROM Badge WHERE BadgeName = ?))
-    """;
+        String getSubscriptionSql = "SELECT SubscriptionID FROM User WHERE UserID = ?";
+        String countBadgesSql = "SELECT COUNT(*) FROM UserBadge WHERE UserID = ?";
+        String insertBadgeSql = """
+            INSERT INTO UserBadge (UserID, BadgeID)
+            VALUES (?, (SELECT BadgeID FROM Badge WHERE BadgeName = ?))
+        """;
 
-    try (Connection conn = getDBConnection()) {
+        try (Connection conn = getDBConnection()) {
+            // Get the user's subscription type
+            try (PreparedStatement subStmt = conn.prepareStatement(getSubscriptionSql)) {
+                subStmt.setInt(1, userID);
+                ResultSet subRs = subStmt.executeQuery();
 
-        // Get the user's subscription type
-        try (PreparedStatement subStmt = conn.prepareStatement(getSubscriptionSql)) {
-            subStmt.setInt(1, userID);
-            ResultSet subRs = subStmt.executeQuery();
+                if (!subRs.next()) return false;
 
-            if (!subRs.next()) return false;
+                int subscriptionID = subRs.getInt("SubscriptionID");
 
-            int subscriptionID = subRs.getInt("SubscriptionID");
+                // Count the number of badges the user has
+                try (PreparedStatement countStmt = conn.prepareStatement(countBadgesSql)) {
+                    countStmt.setInt(1, userID);
+                    ResultSet countRs = countStmt.executeQuery();
 
-            // Count the number of badges the user has
-            try (PreparedStatement countStmt = conn.prepareStatement(countBadgesSql)) {
-                countStmt.setInt(1, userID);
-                ResultSet countRs = countStmt.executeQuery();
+                    if (!countRs.next()) return false;
 
-                if (!countRs.next()) return false;
+                    int badgeCount = countRs.getInt(1);
 
-                int badgeCount = countRs.getInt(1);
+                    // Prevent badge insert if user is on free plan and has 2 or more badges
+                    if (subscriptionID == 2 && badgeCount >= 2) return false;
 
-                // Prevent badge insert if user is on free plan and has 2 or more badges
-                if (subscriptionID == 2 && badgeCount >= 2) return false;
-
-                // Insert the badge
-                try (PreparedStatement insertStmt = conn.prepareStatement(insertBadgeSql)) {
-                    insertStmt.setInt(1, userID);
-                    insertStmt.setString(2, badgeName);
-                    return insertStmt.executeUpdate() > 0;
+                    // Insert the badge
+                    try (PreparedStatement insertStmt = conn.prepareStatement(insertBadgeSql)) {
+                        insertStmt.setInt(1, userID);
+                        insertStmt.setString(2, badgeName);
+                        return insertStmt.executeUpdate() > 0;
+                    }
                 }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    return false;
-
-}
-
-
-    /////////////////////////////////Badges Admin (Adding, Deleting, Getting) ///////////////////////////////
-    
-    public static boolean awardBadgeToUser(int userID, int badgeID) {
-    String sql = "INSERT INTO UserBadge (UserID, BadgeID) VALUES (?, ?)";
-    try (PreparedStatement stmt = getDBConnection().prepareStatement(sql)) {
-        stmt.setInt(1, userID);
-        stmt.setInt(2, badgeID);
-        stmt.executeUpdate();
-        return true;
-    } catch (SQLException e) {
-        e.printStackTrace();
         return false;
     }
-}
 
-public static ResultSet getAllBadges() {
-    String query = "SELECT BadgeID, BadgeName FROM Badge";
-    try {
-        return handler.execQuery(query);
-    } catch (Exception e) {
-        e.printStackTrace();
-        return null;
+    /////////////////////////////////Badges Admin (Adding, Deleting, Getting) ///////////////////////////////
+    public static boolean awardBadgeToUser(int userID, int badgeID) {
+        String sql = "INSERT INTO UserBadge (UserID, BadgeID) VALUES (?, ?)";
+        try (PreparedStatement stmt = getDBConnection().prepareStatement(sql)) {
+            stmt.setInt(1, userID);
+            stmt.setInt(2, badgeID);
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-}
+
+    public static ResultSet getAllBadges() {
+        String query = "SELECT BadgeID, BadgeName FROM Badge";
+        try {
+            return handler.execQuery(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public static ResultSet getBadges() {
-    ResultSet result = null;
-    String query = """
-    SELECT 
-        ub.UserBadgeID,
-        u.UserID,
-        u.FirstName,
-        u.LastName,
-        u.EmailAddress,
-        u.Username,
-        s.StrandName,
-        sub.PlanType,
-        b.BadgeID,
-        b.BadgeName,
-        ub.AwardedAt AS DateAwarded
-    FROM UserBadge ub
-    JOIN User u ON ub.UserID = u.UserID
-    JOIN Badge b ON ub.BadgeID = b.BadgeID
-    LEFT JOIN Strand s ON u.StrandID = s.StrandID
-    LEFT JOIN Subscription sub ON u.SubscriptionID = sub.SubscriptionID
-""";
-
-
-    try {
-        result = handler.execQuery(query); // Make sure handler is initialized
-    } catch (Exception e) {
-        e.printStackTrace();
+        ResultSet result = null;
+        String query = """
+            SELECT 
+                ub.UserBadgeID,
+                u.UserID,
+                u.FirstName,
+                u.LastName,
+                u.EmailAddress,
+                u.Username,
+                s.StrandName,
+                sub.PlanType,
+                b.BadgeID,
+                b.BadgeName,
+                ub.AwardedAt AS DateAwarded
+            FROM UserBadge ub
+            JOIN User u ON ub.UserID = u.UserID
+            JOIN Badge b ON ub.BadgeID = b.BadgeID
+            LEFT JOIN Strand s ON u.StrandID = s.StrandID
+            LEFT JOIN Subscription sub ON u.SubscriptionID = sub.SubscriptionID
+        """;
+        try {
+            result = handler.execQuery(query); // Make sure handler is initialized
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
-
-    return result;
-}
 
     public static boolean deleteBadgeFromUser(int userBadgeID) {
         String sql = "DELETE FROM UserBadge WHERE UserBadgeID = ?";
@@ -300,7 +292,6 @@ public static ResultSet getAllBadges() {
         }
         return false;
     }
-
 
     ////////////////////////// Badges (Has Badge) ///////////////////////////////
     public static boolean hasBadge(int userID, String badgeName) {
@@ -359,50 +350,50 @@ public static ResultSet getAllBadges() {
     }
 
     public static boolean createStudent(Students student) {
-    String sql = "INSERT INTO User (FirstName, LastName, EmailAddress, Username, Password, StrandID, SubscriptionID, PaymentID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    try (Connection conn = getDBConnection();
-         PreparedStatement pstatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        String sql = "INSERT INTO User (FirstName, LastName, EmailAddress, Username, Password, StrandID, SubscriptionID, PaymentID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = getDBConnection();
+             PreparedStatement pstatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-        pstatement.setString(1, student.getFirstName());
-        pstatement.setString(2, student.getLastName());
-        pstatement.setString(3, student.getEmail());
-        pstatement.setString(4, student.getUsername());
-        pstatement.setString(5, student.getPassword());
-        pstatement.setString(6, student.getStrand());
-        pstatement.setInt(7, student.getSubscriptionID());
+            pstatement.setString(1, student.getFirstName());
+            pstatement.setString(2, student.getLastName());
+            pstatement.setString(3, student.getEmail());
+            pstatement.setString(4, student.getUsername());
+            pstatement.setString(5, student.getPassword());
+            pstatement.setString(6, student.getStrand());
+            pstatement.setInt(7, student.getSubscriptionID());
 
-        if (student.getPaymentID() == -1) {
-            pstatement.setNull(8, java.sql.Types.INTEGER);
-        } else {
-            pstatement.setInt(8, student.getPaymentID());
-        }
+            if (student.getPaymentID() == -1) {
+                pstatement.setNull(8, java.sql.Types.INTEGER);
+            } else {
+                pstatement.setInt(8, student.getPaymentID());
+            }
 
-        int res = pstatement.executeUpdate();
+            int res = pstatement.executeUpdate();
 
-        if (res > 0) {
-            ResultSet rs = pstatement.getGeneratedKeys();
-            if (rs.next()) {
-                int userId = rs.getInt(1);
+            if (res > 0) {
+                ResultSet rs = pstatement.getGeneratedKeys();
+                if (rs.next()) {
+                    int userId = rs.getInt(1);
 
-                // If SubscriptionID is 1 (Subscribed), add a transaction
-                if (student.getSubscriptionID() == 1) {
-                    String insertTransactionSQL = "INSERT INTO Transaction (UserID, PaymentID, SubscriptionID, StrandID, TransactionDate) VALUES (?, ?, ?, ?, CURDATE())";
-                    try (PreparedStatement transStmt = conn.prepareStatement(insertTransactionSQL)) {
-                        transStmt.setInt(1, userId);
-                        transStmt.setInt(2, student.getPaymentID());
-                        transStmt.setInt(3, student.getSubscriptionID());
-                        transStmt.setString(4, student.getStrand());
-                        transStmt.executeUpdate();
+                    // If SubscriptionID is 1 (Subscribed), add a transaction
+                    if (student.getSubscriptionID() == 1) {
+                        String insertTransactionSQL = "INSERT INTO Transaction (UserID, PaymentID, SubscriptionID, StrandID, TransactionDate) VALUES (?, ?, ?, ?, CURDATE())";
+                        try (PreparedStatement transStmt = conn.prepareStatement(insertTransactionSQL)) {
+                            transStmt.setInt(1, userId);
+                            transStmt.setInt(2, student.getPaymentID());
+                            transStmt.setInt(3, student.getSubscriptionID());
+                            transStmt.setString(4, student.getStrand());
+                            transStmt.executeUpdate();
+                        }
                     }
                 }
+                return true;
             }
-            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+        return false;
     }
-    return false;
-}
 
     public static boolean updateStudent(Students student) {
         String sql = "UPDATE User SET FirstName = ?, LastName = ?, EmailAddress = ?, Username = ?, Password = ?, StrandID = ?, SubscriptionID = ?, PaymentID = ? WHERE UserID = ?";
@@ -431,32 +422,32 @@ public static ResultSet getAllBadges() {
     }
 
     public static boolean deleteStudent(Students student) {
-    try (Connection conn = getDBConnection()) {
-        conn.setAutoCommit(false); // Start transaction
+        try (Connection conn = getDBConnection()) {
+            conn.setAutoCommit(false); // Start transaction
 
-        try (
-            PreparedStatement delTrans = conn.prepareStatement("DELETE FROM Transaction WHERE UserID = ?");
-            PreparedStatement delUser = conn.prepareStatement("DELETE FROM User WHERE UserID = ?")
-        ) {
-            // Delete transactions first
-            delTrans.setInt(1, student.getUserID());
-            delTrans.executeUpdate();
+            try (
+                PreparedStatement delTrans = conn.prepareStatement("DELETE FROM Transaction WHERE UserID = ?");
+                PreparedStatement delUser = conn.prepareStatement("DELETE FROM User WHERE UserID = ?")
+            ) {
+                // Delete transactions first
+                delTrans.setInt(1, student.getUserID());
+                delTrans.executeUpdate();
 
-            // Now delete the user
-            delUser.setInt(1, student.getUserID());
-            int res = delUser.executeUpdate();
+                // Now delete the user
+                delUser.setInt(1, student.getUserID());
+                int res = delUser.executeUpdate();
 
-            conn.commit(); // Commit transaction
-            return res > 0;
+                conn.commit(); // Commit transaction
+                return res > 0;
+            } catch (Exception e) {
+                conn.rollback(); // Rollback if any error occurs
+                e.printStackTrace();
+            }
         } catch (Exception e) {
-            conn.rollback(); // Rollback if any error occurs
             e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+        return false;
     }
-    return false;
-}
     /////////////////// Get Payment, Subscription, Strands | SubscriptionIDByPlanType, StrandIDByName /////////////////////
     public static List<String> getPaymentMethods() {
         List<String> paymentMethods = new ArrayList<>();
@@ -583,163 +574,115 @@ public static ResultSet getAllBadges() {
 
     /////////////////////////////////////////////////////////ADD ADMIN///////////////////////////////////////////////////////
     public static boolean createAdmin(Admin admin) {
-    String sql = "INSERT INTO Admin (Username, Password) VALUES (?, ?)";
-    try (Connection conn = getDBConnection();
-         PreparedStatement pstatement = conn.prepareStatement(sql)) {
-        pstatement.setString(1, admin.getAdminUserName());
-        pstatement.setString(2, admin.getAdminPassword());
-        int res = pstatement.executeUpdate();
-        return res > 0;
-    } catch (Exception e) {
-        e.printStackTrace();
+        String sql = "INSERT INTO Admin (Username, Password) VALUES (?, ?)";
+        try (Connection conn = getDBConnection();
+             PreparedStatement pstatement = conn.prepareStatement(sql)) {
+            pstatement.setString(1, admin.getAdminUserName());
+            pstatement.setString(2, admin.getAdminPassword());
+            int res = pstatement.executeUpdate();
+            return res > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
-    return false;
-}
 
     public static boolean updateAdmin(Admin admin) {
-    String sql = "UPDATE Admin SET Username = ?, Password = ? WHERE AdminID = ?";
-    try (Connection conn = getDBConnection();
-         PreparedStatement pstatement = conn.prepareStatement(sql)) {
-        pstatement.setString(1, admin.getAdminUserName());
-        pstatement.setString(2, admin.getAdminPassword());
-        pstatement.setInt(3, admin.getAdminID());
-        int res = pstatement.executeUpdate();
-        return res > 0;
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return false;
-}
-public static boolean isAdminUsernameTaken(String username) {
-    String sql = "SELECT 1 FROM Admin WHERE Username = ?";
-    try (Connection conn = getDBConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setString(1, username);
-        ResultSet rs = stmt.executeQuery();
-        return rs.next();
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-    return false;
-}
-public static boolean deleteAdmin(Admin admin) {
-    try {
-        PreparedStatement pstatement = getDBConnection().prepareStatement("DELETE FROM Admin WHERE AdminID = ?");
-        pstatement.setInt(1, admin.getAdminID());
-
-        int res = pstatement.executeUpdate();
-        if (res > 0) {
-            return true;
+        String sql = "UPDATE Admin SET Username = ?, Password = ? WHERE AdminID = ?";
+        try (Connection conn = getDBConnection();
+             PreparedStatement pstatement = conn.prepareStatement(sql)) {
+            pstatement.setString(1, admin.getAdminUserName());
+            pstatement.setString(2, admin.getAdminPassword());
+            pstatement.setInt(3, admin.getAdminID());
+            int res = pstatement.executeUpdate();
+            return res > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+        return false;
     }
-    return false;
-}
 
-public static ResultSet getBillings() {
-    ResultSet result = null;
-    try {
-        String query = """
-            SELECT 
-    u.UserID,
-    t.TransactionID,
-    t.TransactionDate,
-    s.StrandName,
-    sub.SubscriptionID,
-    u.FirstName,
-    u.LastName,
-    u.EmailAddress,
-    p.PaymentMethod,
-    CASE
-        WHEN sub.PlanType = 'Subscribed' THEN '199.00'
-        ELSE '0.00'
-    END AS PaymentDetails
-    FROM User u
-    LEFT JOIN Transaction t ON t.UserID = u.UserID
-    LEFT JOIN Strand s ON u.StrandID = s.StrandID
-    LEFT JOIN Subscription sub ON u.SubscriptionID = sub.SubscriptionID
-    LEFT JOIN Payment p ON u.PaymentID = p.PaymentID
-    WHERE sub.SubscriptionID IS NOT NULL
-        """;
-        result = handler.execQuery(query);
-    } catch (Exception e) {
-        System.err.println("Error retrieving billing information: " + e.getMessage());
-        e.printStackTrace();
+    public static boolean isAdminUsernameTaken(String username) {
+        String sql = "SELECT 1 FROM Admin WHERE Username = ?";
+        try (Connection conn = getDBConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
-    return result;
-}
 
-public static boolean updateUserSubscriptionStatus(int userId, String status) {
-    try (Connection conn = getDBConnection()) {
-        conn.setAutoCommit(false); // Begin transaction
+    public static boolean deleteAdmin(Admin admin) {
+        try {
+            PreparedStatement pstatement = getDBConnection().prepareStatement("DELETE FROM Admin WHERE AdminID = ?");
+            pstatement.setInt(1, admin.getAdminID());
 
-        // Get SubscriptionID for "Free" or any other status
-        int subscriptionId = -1;
-        try (PreparedStatement getSubId = conn.prepareStatement("SELECT SubscriptionID FROM Subscription WHERE PlanType = ?")) {
-            getSubId.setString(1, status);
-            ResultSet rs = getSubId.executeQuery();
-            if (rs.next()) {
-                subscriptionId = rs.getInt("SubscriptionID");
-            } else {
-                System.err.println("No SubscriptionID found for status: " + status);
-                conn.rollback();
-                return false;
+            int res = pstatement.executeUpdate();
+            if (res > 0) {
+                return true;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        // Update User with SubscriptionID and NULL the PaymentID
-        try (PreparedStatement stmt = conn.prepareStatement("UPDATE User SET SubscriptionID = ?, PaymentID = NULL WHERE UserID = ?")) {
-            stmt.setInt(1, subscriptionId);
-            stmt.setInt(2, userId);
-            int rows = stmt.executeUpdate();
-            if (rows == 0) {
-                conn.rollback();
-                return false;
-            }
-        }
-
-        // If status is "Free" or "Cancelled", delete transactions
-        if (status.equalsIgnoreCase("Free") || status.equalsIgnoreCase("Cancelled")) {
-            try (PreparedStatement delTrans = conn.prepareStatement("DELETE FROM Transaction WHERE UserID = ?")) {
-                delTrans.setInt(1, userId);
-                delTrans.executeUpdate();
-            }
-        }
-
-        conn.commit();
-        return true;
-
-    } catch (Exception e) {
-        e.printStackTrace();
+        return false;
     }
-    return false;
-}
 
-
-public static boolean updateUserSubscriptionStatus(int userId, String status, String paymentMethod) {
-    try (Connection conn = getDBConnection()) {
-        conn.setAutoCommit(false); // Begin transaction
-
-        // Get SubscriptionID from status
-        int subscriptionId = -1;
-        try (PreparedStatement getSubId = conn.prepareStatement(
-                "SELECT SubscriptionID FROM Subscription WHERE PlanType = ?")) {
-            getSubId.setString(1, status);
-            ResultSet rs = getSubId.executeQuery();
-            if (rs.next()) {
-                subscriptionId = rs.getInt("SubscriptionID");
-            } else {
-                System.err.println("No SubscriptionID found for status: " + status);
-                conn.rollback();
-                return false;
-            }
+    public static ResultSet getBillings() {
+        ResultSet result = null;
+        try {
+            String query = """
+                SELECT 
+                    u.UserID,
+                    t.TransactionID,
+                    t.TransactionDate,
+                    s.StrandName,
+                    sub.SubscriptionID,
+                    u.FirstName,
+                    u.LastName,
+                    u.EmailAddress,
+                    p.PaymentMethod,
+                    CASE
+                        WHEN sub.PlanType = 'Subscribed' THEN '199.00'
+                        ELSE '0.00'
+                    END AS PaymentDetails
+                FROM User u
+                LEFT JOIN Transaction t ON t.UserID = u.UserID
+                LEFT JOIN Strand s ON u.StrandID = s.StrandID
+                LEFT JOIN Subscription sub ON u.SubscriptionID = sub.SubscriptionID
+                LEFT JOIN Payment p ON u.PaymentID = p.PaymentID
+                WHERE sub.SubscriptionID IS NOT NULL
+            """;
+            result = handler.execQuery(query);
+        } catch (Exception e) {
+            System.err.println("Error retrieving billing information: " + e.getMessage());
+            e.printStackTrace();
         }
+        return result;
+    }
 
-        // Handle downgrade to Free or Cancelled (no payment)
-        if (status.equalsIgnoreCase("Free") || status.equalsIgnoreCase("Cancelled")) {
-            try (PreparedStatement stmt = conn.prepareStatement(
-                    "UPDATE User SET SubscriptionID = ?, PaymentID = NULL WHERE UserID = ?")) {
+    public static boolean updateUserSubscriptionStatus(int userId, String status) {
+        try (Connection conn = getDBConnection()) {
+            conn.setAutoCommit(false); // Begin transaction
+
+            // Get SubscriptionID for "Free" or any other status
+            int subscriptionId = -1;
+            try (PreparedStatement getSubId = conn.prepareStatement("SELECT SubscriptionID FROM Subscription WHERE PlanType = ?")) {
+                getSubId.setString(1, status);
+                ResultSet rs = getSubId.executeQuery();
+                if (rs.next()) {
+                    subscriptionId = rs.getInt("SubscriptionID");
+                } else {
+                    System.err.println("No SubscriptionID found for status: " + status);
+                    conn.rollback();
+                    return false;
+                }
+            }
+
+            // Update User with SubscriptionID and NULL the PaymentID
+            try (PreparedStatement stmt = conn.prepareStatement("UPDATE User SET SubscriptionID = ?, PaymentID = NULL WHERE UserID = ?")) {
                 stmt.setInt(1, subscriptionId);
                 stmt.setInt(2, userId);
                 int rows = stmt.executeUpdate();
@@ -749,219 +692,269 @@ public static boolean updateUserSubscriptionStatus(int userId, String status, St
                 }
             }
 
-            try (PreparedStatement delTrans = conn.prepareStatement(
-                    "DELETE FROM Transaction WHERE UserID = ?")) {
-                delTrans.setInt(1, userId);
-                delTrans.executeUpdate();
+            // If status is "Free" or "Cancelled", delete transactions
+            if (status.equalsIgnoreCase("Free") || status.equalsIgnoreCase("Cancelled")) {
+                try (PreparedStatement delTrans = conn.prepareStatement("DELETE FROM Transaction WHERE UserID = ?")) {
+                    delTrans.setInt(1, userId);
+                    delTrans.executeUpdate();
+                }
             }
 
             conn.commit();
             return true;
-        }
 
-        // For "Subscribed" status, fetch PaymentID
-        int paymentId = -1;
-        try (PreparedStatement getPayId = conn.prepareStatement(
-                "SELECT PaymentID FROM Payment WHERE PaymentMethod = ?")) {
-            getPayId.setString(1, paymentMethod);
-            ResultSet rs = getPayId.executeQuery();
-            if (rs.next()) {
-                paymentId = rs.getInt("PaymentID");
-            } else {
-                System.err.println("No PaymentID found for method: " + paymentMethod);
-                conn.rollback();
-                return false;
-            }
-        }
-
-        // Update user with subscription and payment info
-        try (PreparedStatement stmt = conn.prepareStatement(
-                "UPDATE User SET SubscriptionID = ?, PaymentID = ? WHERE UserID = ?")) {
-            stmt.setInt(1, subscriptionId);
-            stmt.setInt(2, paymentId);
-            stmt.setInt(3, userId);
-            int rows = stmt.executeUpdate();
-            if (rows == 0) {
-                conn.rollback();
-                return false;
-            }
-        }
-
-        // Add transaction for subscribed user
-        if (status.equalsIgnoreCase("Subscribed")) {
-            addTransactionForUser(userId, conn);
-        }
-
-        conn.commit();
-        return true;
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return false;
-}
-
-private static void addTransactionForUser(int userId, Connection conn) {
-    String sql = """
-        INSERT INTO Transaction (UserID, PaymentID, SubscriptionID, StrandID, TransactionDate)
-        SELECT 
-            u.UserID,
-            u.PaymentID,
-            u.SubscriptionID,
-            u.StrandID,
-            CURDATE()
-        FROM User u
-        WHERE u.UserID = ?
-          AND NOT EXISTS (
-              SELECT 1 FROM Transaction t WHERE t.UserID = u.UserID
-          )
-    """;
-
-    try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setInt(1, userId);
-        stmt.executeUpdate();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
-public static boolean deleteUserById(int userId) {
-    try (Connection conn = getDBConnection()) {
-        conn.setAutoCommit(false); // Start transaction
-
-        try (
-            PreparedStatement delTrans = conn.prepareStatement("DELETE FROM Transaction WHERE UserID = ?");
-            PreparedStatement delUser = conn.prepareStatement("DELETE FROM User WHERE UserID = ?")
-        ) {
-            // Delete transactions first
-            delTrans.setInt(1, userId);
-            delTrans.executeUpdate();
-
-            // Now delete the user
-            delUser.setInt(1, userId);
-            int res = delUser.executeUpdate();
-
-            conn.commit(); // Commit transaction
-            return res > 0;
         } catch (Exception e) {
-            conn.rollback(); // Rollback if any error occurs
             e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+        return false;
     }
-    return false;
-}
 
-public static boolean deleteTransaction(int transactionId) {
-    String sql = "DELETE FROM Transaction WHERE TransactionID = ?";
-    try (Connection conn = getDBConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setInt(1, transactionId);
-        return stmt.executeUpdate() > 0;
-    } catch (Exception e) {
-        e.printStackTrace();
+    public static boolean updateUserSubscriptionStatus(int userId, String status, String paymentMethod) {
+        try (Connection conn = getDBConnection()) {
+            conn.setAutoCommit(false); // Begin transaction
+
+            // Get SubscriptionID from status
+            int subscriptionId = -1;
+            try (PreparedStatement getSubId = conn.prepareStatement(
+                    "SELECT SubscriptionID FROM Subscription WHERE PlanType = ?")) {
+                getSubId.setString(1, status);
+                ResultSet rs = getSubId.executeQuery();
+                if (rs.next()) {
+                    subscriptionId = rs.getInt("SubscriptionID");
+                } else {
+                    System.err.println("No SubscriptionID found for status: " + status);
+                    conn.rollback();
+                    return false;
+                }
+            }
+
+            // Handle downgrade to Free or Cancelled (no payment)
+            if (status.equalsIgnoreCase("Free") || status.equalsIgnoreCase("Cancelled")) {
+                try (PreparedStatement stmt = conn.prepareStatement(
+                        "UPDATE User SET SubscriptionID = ?, PaymentID = NULL WHERE UserID = ?")) {
+                    stmt.setInt(1, subscriptionId);
+                    stmt.setInt(2, userId);
+                    int rows = stmt.executeUpdate();
+                    if (rows == 0) {
+                        conn.rollback();
+                        return false;
+                    }
+                }
+
+                try (PreparedStatement delTrans = conn.prepareStatement(
+                        "DELETE FROM Transaction WHERE UserID = ?")) {
+                    delTrans.setInt(1, userId);
+                    delTrans.executeUpdate();
+                }
+
+                conn.commit();
+                return true;
+            }
+
+            // For "Subscribed" status, fetch PaymentID
+            int paymentId = -1;
+            try (PreparedStatement getPayId = conn.prepareStatement(
+                    "SELECT PaymentID FROM Payment WHERE PaymentMethod = ?")) {
+                getPayId.setString(1, paymentMethod);
+                ResultSet rs = getPayId.executeQuery();
+                if (rs.next()) {
+                    paymentId = rs.getInt("PaymentID");
+                } else {
+                    System.err.println("No PaymentID found for method: " + paymentMethod);
+                    conn.rollback();
+                    return false;
+                }
+            }
+
+            // Update user with subscription and payment info
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "UPDATE User SET SubscriptionID = ?, PaymentID = ? WHERE UserID = ?")) {
+                stmt.setInt(1, subscriptionId);
+                stmt.setInt(2, paymentId);
+                stmt.setInt(3, userId);
+                int rows = stmt.executeUpdate();
+                if (rows == 0) {
+                    conn.rollback();
+                    return false;
+                }
+            }
+
+            // Add transaction for subscribed user
+            if (status.equalsIgnoreCase("Subscribed")) {
+                addTransactionForUser(userId, conn);
+            }
+
+            conn.commit();
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
-    return false;
-}
 
-public static ResultSet getBillingsByStrand(String strandName) {
-    ResultSet result = null;
-    try {
-        String query = """
+    private static void addTransactionForUser(int userId, Connection conn) {
+        String sql = """
+            INSERT INTO Transaction (UserID, PaymentID, SubscriptionID, StrandID, TransactionDate)
             SELECT 
-    u.UserID,
-    t.TransactionID,
-    t.TransactionDate,
-    s.StrandName,
-    sub.SubscriptionID,
-    u.FirstName,
-    u.LastName,
-    u.EmailAddress,
-    p.PaymentMethod,
-    CASE
-        WHEN sub.PlanType = 'Subscribed' THEN '199.00'
-        ELSE '0.00'
-    END AS PaymentDetails
-    FROM User u
-    LEFT JOIN Transaction t ON t.UserID = u.UserID
-    LEFT JOIN Strand s ON u.StrandID = s.StrandID
-    LEFT JOIN Subscription sub ON u.SubscriptionID = sub.SubscriptionID
-    LEFT JOIN Payment p ON u.PaymentID = p.PaymentID
-    WHERE sub.SubscriptionID IS NOT NULL AND s.StrandName = ?
+                u.UserID,
+                u.PaymentID,
+                u.SubscriptionID,
+                u.StrandID,
+                CURDATE()
+            FROM User u
+            WHERE u.UserID = ?
+              AND NOT EXISTS (
+                  SELECT 1 FROM Transaction t WHERE t.UserID = u.UserID
+              )
         """;
-        PreparedStatement stmt = getDBConnection().prepareStatement(query);
-        stmt.setString(1, strandName);
-        result = stmt.executeQuery();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return result;
-}
 
-public static ResultSet getStudentsByStrand(String strandName) {
-    ResultSet result = null;
-    try {
-        String query = """
-            SELECT u.UserID, u.FirstName, u.LastName, u.EmailAddress, u.Username, u.Password, u.Created, 
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean deleteUserById(int userId) {
+        try (Connection conn = getDBConnection()) {
+            conn.setAutoCommit(false); // Start transaction
+
+            try (
+                PreparedStatement delTrans = conn.prepareStatement("DELETE FROM Transaction WHERE UserID = ?");
+                PreparedStatement delUser = conn.prepareStatement("DELETE FROM User WHERE UserID = ?")
+            ) {
+                // Delete transactions first
+                delTrans.setInt(1, userId);
+                delTrans.executeUpdate();
+
+                // Now delete the user
+                delUser.setInt(1, userId);
+                int res = delUser.executeUpdate();
+
+                conn.commit(); // Commit transaction
+                return res > 0;
+            } catch (Exception e) {
+                conn.rollback(); // Rollback if any error occurs
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static boolean deleteTransaction(int transactionId) {
+        String sql = "DELETE FROM Transaction WHERE TransactionID = ?";
+        try (Connection conn = getDBConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, transactionId);
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static ResultSet getBillingsByStrand(String strandName) {
+        ResultSet result = null;
+        try {
+            String query = """
+                SELECT 
+                    u.UserID,
+                    t.TransactionID,
+                    t.TransactionDate,
+                    s.StrandName,
+                    sub.SubscriptionID,
+                    u.FirstName,
+                    u.LastName,
+                    u.EmailAddress,
+                    p.PaymentMethod,
+                    CASE
+                        WHEN sub.PlanType = 'Subscribed' THEN '199.00'
+                        ELSE '0.00'
+                    END AS PaymentDetails
+                FROM User u
+                LEFT JOIN Transaction t ON t.UserID = u.UserID
+                LEFT JOIN Strand s ON u.StrandID = s.StrandID
+                LEFT JOIN Subscription sub ON u.SubscriptionID = sub.SubscriptionID
+                LEFT JOIN Payment p ON u.PaymentID = p.PaymentID
+                WHERE sub.SubscriptionID IS NOT NULL AND s.StrandName = ?
+            """;
+            PreparedStatement stmt = getDBConnection().prepareStatement(query);
+            stmt.setString(1, strandName);
+            result = stmt.executeQuery();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static ResultSet getStudentsByStrand(String strandName) {
+        ResultSet result = null;
+        try {
+            String query = """
+                SELECT u.UserID, u.FirstName, u.LastName, u.EmailAddress, u.Username, u.Password, u.Created, 
+                       s.StrandName, u.SubscriptionID, u.PaymentID
+                FROM User u
+                JOIN Strand s ON u.StrandID = s.StrandID
+                WHERE s.StrandName = ?
+            """;
+            PreparedStatement stmt = getDBConnection().prepareStatement(query);
+            stmt.setString(1, strandName);
+            result = stmt.executeQuery();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    // Validate student login by username and password
+    public static boolean validatestudentLogin(String username, String password) {
+        String sql = "SELECT 1 FROM User WHERE Username = ? AND Password = ?";
+        try (Connection conn = getDBConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Get Students object by username
+    public static Students getStudentByUsername(String username) {
+        String sql = """
+            SELECT u.UserID, u.FirstName, u.LastName, u.EmailAddress, u.Username, u.Password, u.Created,
                    s.StrandName, u.SubscriptionID, u.PaymentID
             FROM User u
             JOIN Strand s ON u.StrandID = s.StrandID
-            WHERE s.StrandName = ?
+            WHERE u.Username = ?
         """;
-        PreparedStatement stmt = getDBConnection().prepareStatement(query);
-        stmt.setString(1, strandName);
-        result = stmt.executeQuery();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return result;
-}
-
-// Validate student login by username and password
-public static boolean validatestudentLogin(String username, String password) {
-    String sql = "SELECT 1 FROM User WHERE Username = ? AND Password = ?";
-    try (Connection conn = getDBConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setString(1, username);
-        stmt.setString(2, password);
-        ResultSet rs = stmt.executeQuery();
-        return rs.next();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return false;
-}
-
-// Get Students object by username
-public static Students getStudentByUsername(String username) {
-    String sql = """
-        SELECT u.UserID, u.FirstName, u.LastName, u.EmailAddress, u.Username, u.Password, u.Created,
-               s.StrandName, u.SubscriptionID, u.PaymentID
-        FROM User u
-        JOIN Strand s ON u.StrandID = s.StrandID
-        WHERE u.Username = ?
-    """;
-    try (Connection conn = getDBConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setString(1, username);
-        ResultSet rs = stmt.executeQuery();
-        if (rs.next()) {
-            return new Students(
-                rs.getInt("UserID"),
-                rs.getString("FirstName"),
-                rs.getString("LastName"),
-                rs.getString("EmailAddress"),
-                rs.getString("Username"),
-                rs.getString("Password"),
-                rs.getString("StrandName"),
-                rs.getInt("SubscriptionID"),
-                rs.getInt("PaymentID"),
-                rs.getString("Created")
-            );
+        try (Connection conn = getDBConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new Students(
+                    rs.getInt("UserID"),
+                    rs.getString("FirstName"),
+                    rs.getString("LastName"),
+                    rs.getString("EmailAddress"),
+                    rs.getString("Username"),
+                    rs.getString("Password"),
+                    rs.getString("StrandName"),
+                    rs.getInt("SubscriptionID"),
+                    rs.getInt("PaymentID"),
+                    rs.getString("Created")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+        return null;
     }
-    return null;
-}
 }

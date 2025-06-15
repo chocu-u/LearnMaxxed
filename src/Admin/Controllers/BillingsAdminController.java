@@ -62,7 +62,7 @@ public class BillingsAdminController implements Initializable {
     @FXML
     private TableColumn<Billings, Integer> billingUserIdColumn;
 
-      @FXML
+    @FXML
     private TableColumn<Billings, String> PaymentDetailsColumn;
 
     @FXML
@@ -70,7 +70,6 @@ public class BillingsAdminController implements Initializable {
 
     @FXML
     private TableColumn<Billings, String> paymentDetailsColumn;
-
 
     @FXML
     private ComboBox<String> strandfilterCombo;
@@ -110,7 +109,6 @@ public class BillingsAdminController implements Initializable {
         billingTransactionDateColumn.setCellValueFactory(new PropertyValueFactory<>("transactionDate"));
         billingUserIdColumn.setCellValueFactory(new PropertyValueFactory<>("userId"));
 
-        // Setup strand filter combo box
         strandfilterCombo.setItems(FXCollections.observableArrayList("All Students", "STEM", "ICT"));
         strandfilterCombo.getSelectionModel().selectFirst();
         strandfilterCombo.setOnAction(event -> filterBillings());
@@ -124,17 +122,17 @@ public class BillingsAdminController implements Initializable {
             ResultSet rs = Database.DatabaseHandler.getBillings();
             while (rs.next()) {
                 Billings billing = new Billings(
-    rs.getInt("UserID"),
-    rs.getInt("TransactionID"),
-    rs.getString("TransactionDate"),
-    rs.getString("StrandName"),
-    rs.getInt("SubscriptionID"),
-    rs.getString("FirstName"),
-    rs.getString("LastName"),
-    rs.getString("EmailAddress"),
-    rs.getString("PaymentMethod"),
-    rs.getString("PaymentDetails")
-);
+                    rs.getInt("UserID"),
+                    rs.getInt("TransactionID"),
+                    rs.getString("TransactionDate"),
+                    rs.getString("StrandName"),
+                    rs.getInt("SubscriptionID"),
+                    rs.getString("FirstName"),
+                    rs.getString("LastName"),
+                    rs.getString("EmailAddress"),
+                    rs.getString("PaymentMethod"),
+                    rs.getString("PaymentDetails")
+                );
                 billingList.add(billing);
             }
         } catch (Exception e) {
@@ -153,17 +151,17 @@ public class BillingsAdminController implements Initializable {
 
             while (rs.next()) {
                 Billings billing = new Billings(
-    rs.getInt("UserID"),
-    rs.getInt("TransactionID"),
-    rs.getString("TransactionDate"),
-    rs.getString("StrandName"),
-    rs.getInt("SubscriptionID"),
-    rs.getString("FirstName"),
-    rs.getString("LastName"),
-    rs.getString("EmailAddress"),
-    rs.getString("PaymentMethod"),
-    rs.getString("PaymentDetails")
-);
+                    rs.getInt("UserID"),
+                    rs.getInt("TransactionID"),
+                    rs.getString("TransactionDate"),
+                    rs.getString("StrandName"),
+                    rs.getInt("SubscriptionID"),
+                    rs.getString("FirstName"),
+                    rs.getString("LastName"),
+                    rs.getString("EmailAddress"),
+                    rs.getString("PaymentMethod"),
+                    rs.getString("PaymentDetails")
+                );
                 billingList.add(billing);
             }
         } catch (Exception e) {
@@ -192,7 +190,7 @@ public class BillingsAdminController implements Initializable {
 
             Stage popupStage = new Stage();
             popupStage.setTitle("Update Subscription Status");
-            popupStage.initStyle(javafx.stage.StageStyle.UNDECORATED); // <-- Add this line
+            popupStage.initStyle(javafx.stage.StageStyle.UNDECORATED);
             popupStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
             popupStage.setScene(new Scene(root));
             popupStage.showAndWait();
@@ -205,7 +203,7 @@ public class BillingsAdminController implements Initializable {
 
     @FXML
     private void goToStudentsButtonHandler() {
-          try {
+        try {
             Stage stage = (Stage) dashboardButton.getScene().getWindow();
             Parent root = FXMLLoader.load(getClass().getResource("/Admin/FXML/Students.fxml"));
             stage.setTitle("Students");
@@ -226,7 +224,7 @@ public class BillingsAdminController implements Initializable {
             alert.showAndWait();
             return;
         }
-        // Confirm deletion
+
         javafx.scene.control.Alert confirm = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Confirm Deletion");
         confirm.setHeaderText(null);
@@ -268,7 +266,7 @@ public class BillingsAdminController implements Initializable {
 
     @FXML
     private void dashboardButtonHandler() {
-     try {
+        try {
             Stage stage = (Stage) dashboardButton.getScene().getWindow();
             Parent root = FXMLLoader.load(getClass().getResource("/Admin/FXML/AdminPage.fxml"));
             stage.setTitle("Students STEM");
@@ -312,4 +310,4 @@ public class BillingsAdminController implements Initializable {
     }
 }
 
-    
+

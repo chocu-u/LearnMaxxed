@@ -25,27 +25,34 @@ public class BasicCalChap3VidController implements Initializable {
     private MediaPlayer mediaPlayer;
 
     @Override
-    public void initialize(URL arg0, ResourceBundle arg1) {
-
+    public void initialize(URL location, ResourceBundle resources) {
         file = new File("Videos/Integ.mp4");
-        media = new Media(file.toURI().toString());
-        mediaPlayer = new MediaPlayer(media);
-        mediaView.setMediaPlayer(mediaPlayer);
+        if (file.exists()) {
+            media = new Media(file.toURI().toString());
+            mediaPlayer = new MediaPlayer(media);
+            mediaView.setMediaPlayer(mediaPlayer);
+        }
     }
 
     @FXML
     public void playMedia() {
-        mediaPlayer.play();
+        if (mediaPlayer != null) {
+            mediaPlayer.play();
+        }
     }
 
     @FXML
     public void pauseMedia() {
-        mediaPlayer.pause();
+        if (mediaPlayer != null) {
+            mediaPlayer.pause();
+        }
     }
 
     @FXML
     public void resetMedia() {
-        mediaPlayer.seek(mediaPlayer.getStartTime());
+        if (mediaPlayer != null) {
+            mediaPlayer.seek(mediaPlayer.getStartTime());
+        }
     }
 
     @FXML
@@ -67,9 +74,8 @@ public class BasicCalChap3VidController implements Initializable {
     }
 
     public MediaPlayer getMediaPlayer() {
-    return mediaPlayer;
-
-}
+        return mediaPlayer;
+    }
 }
 
 

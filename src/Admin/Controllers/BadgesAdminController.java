@@ -23,7 +23,6 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class BadgesAdminController implements Initializable {
@@ -106,7 +105,6 @@ public class BadgesAdminController implements Initializable {
         displayBadges();
         loadStrands();
 
-        // Add listener for filtering
         strandfilterCombo.setOnAction(event -> filterUsersByStrand());
         searchField.textProperty().addListener((observable, oldValue, newValue) -> searchFieldHandler());
     }
@@ -114,7 +112,7 @@ public class BadgesAdminController implements Initializable {
     public void displayBadges() {
         badgesList.clear();
 
-        ResultSet result = DatabaseHandler.getBadges(); // You need to implement this method
+        ResultSet result = DatabaseHandler.getBadges(); 
         if (result == null) {
             System.err.println("Error: ResultSet is null. Check database connection.");
             return;
@@ -260,12 +258,12 @@ public class BadgesAdminController implements Initializable {
 
     private void loadStrands() {
         try {
-            java.util.List<String> strands = DatabaseHandler.getStrands(); // Now returns List<String>
-            strandfilterCombo.getItems().add("All"); // Optionally add an "All" option
+            java.util.List<String> strands = DatabaseHandler.getStrands(); 
+            strandfilterCombo.getItems().add("All"); 
             if (strands != null) {
                 strandfilterCombo.getItems().addAll(strands);
             }
-            strandfilterCombo.getSelectionModel().selectFirst(); // Select "All" by default
+            strandfilterCombo.getSelectionModel().selectFirst();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -276,7 +274,7 @@ public class BadgesAdminController implements Initializable {
         ObservableList<Badges> filteredList = FXCollections.observableArrayList();
 
         if ("All".equals(selectedStrand)) {
-            filteredList.addAll(badgesList); // allUsersList is your master list of users
+            filteredList.addAll(badgesList); 
         } else {
             for (Badges badge : badgesList) {
                 if (selectedStrand.equals(badge.getStrand())) {
@@ -284,7 +282,7 @@ public class BadgesAdminController implements Initializable {
                 }
             }
         }
-        badgesTable.setItems(filteredList); // userTable is your TableView<User>
+        badgesTable.setItems(filteredList); 
     }
 
     @FXML

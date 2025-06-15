@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import org.controlsfx.control.textfield.CustomTextField;
-
 import com.jfoenix.controls.JFXButton;
 
 import Admin.Controllers.AdminStudentsController;
@@ -24,6 +23,7 @@ import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
 
 public class StudentsCreateController implements Initializable {
+
     private AdminStudentsController parentController;
     private AdminStudentsICTController parentICTController;
     private AdminStudentsSTEMController parentSTEMController;
@@ -43,7 +43,6 @@ public class StudentsCreateController implements Initializable {
         loadStrands();
         loadPlanTypes();
 
-        // Add this block to handle enabling/disabling paymentCombo
         subscriptionCombo.valueProperty().addListener((obs, oldVal, newVal) -> {
             if ("Free".equalsIgnoreCase(newVal)) {
                 paymentCombo.setDisable(true);
@@ -102,16 +101,15 @@ public class StudentsCreateController implements Initializable {
             return;
         }
 
-        // Plan type logic
         int paymentID = -1;
         if (planType.equalsIgnoreCase("Free")) {
             if (!paymentMethod.isEmpty()) {
                 showAlert(AlertType.ERROR, "You have chosen Free Plan Type. Payment method should not be selected.");
-                paymentCombo.getSelectionModel().clearSelection(); // Reset the payment ComboBox
-                loadPaymentMethods(); // Reload payment methods 
+                paymentCombo.getSelectionModel().clearSelection();
+                loadPaymentMethods();
                 return;
             }
-            paymentID = -1; // No payment for free plan
+            paymentID = -1;
         } else {
             if (paymentMethod.isEmpty()) {
                 showAlert(AlertType.ERROR, "Please select a payment method for paid plans.");
@@ -166,7 +164,7 @@ public class StudentsCreateController implements Initializable {
     public void setParentController(AdminStudentsController controller) {
         this.parentController = controller;
     }
-    
+
     public void setParentController(AdminStudentsICTController controller) {
         this.parentICTController = controller;
     }
