@@ -1,18 +1,19 @@
-## Getting Started
+# LearnMaxxing LMS
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+**LearnMaxxing LMS** is a lightweight learning management system built in Java using Visual Studio Code. It simulates a digital classroom experience where users can manage courses, track progress through badges, and earn achievement badges.
+
+## Features
+
+- User account management
+- Badge system for achievements
+- Simple, clean Java-based structure
 
 ## Folder Structure
 
-The workspace contains two folders by default, where:
+- `src`: Source code for the application  
+- `lib`: External libraries and dependencies  
+- `bin`: Compiled output (auto-generated)
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+## How to Run
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+Open the project in VS Code and run the main class from the `src` folder. Ensure Java and JavaFX is properly installed and configured.
